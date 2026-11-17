@@ -10,28 +10,134 @@ import { formatNaira } from '../../utils/format';
 import { ProductCard } from '../product/ProductCard';
 import { SafeImage } from '../common/SafeImage';
 
+/**
+ * Picks up to `limit` products while cycling round-robin across different categories
+ * so no single department (like rice & beans) dominates any homepage shelf.
+ */
+function pickDiverseProducts(
+  source: typeof PRODUCTS,
+  limit: number,
+  priorityCategoryOrder?: string[]
+) {
+  const buckets = new Map<string, typeof PRODUCTS>();
+  for (const item of source) {
+    const arr = buckets.get(item.categoryId) || [];
+    arr.push(item);
+    buckets.set(item.categoryId, arr);
+  }
+
+  const keys = priorityCategoryOrder
+    ? [
+        ...priorityCategoryOrder.filter((k) => buckets.has(k)),
+        ...[...buckets.keys()].filter((k) => !priorityCategoryOrder.includes(k)),
+      ]
+    : [...buckets.keys()];
+
+  const picked: typeof PRODUCTS = [];
+  let round = 0;
+  while (picked.length < limit) {
+    let addedInRound = false;
+    for (const key of keys) {
+      const list = buckets.get(key);
+      if (list && list[round]) {
+        picked.push(list[round]);
+        addedInRound = true;
+        if (picked.length >= limit) break;
+      }
+    }
+    if (!addedInRound) break;
+    round++;
+  }
+  return picked;
+}
+
+const FRESH_PRODUCE_AND_EGGS_CATS = ['fruits', 'vegetables', 'dairy-eggs', 'yam-potatoes'];
+const PROTEIN_AND_COOKING_CATS = ['meat-poultry', 'fish-seafood', 'cooking-oils', 'spices-seasonings'];
+const PANTRY_DRINKS_HOME_CATS = ['breakfast', 'beverages', 'snacks-confectionery', 'household'];
+
 export function HomeSections() {
-  const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('rice-grains');
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('fruits');
   const [openFaqId, setOpenFaqId] = useState<string>(FAQ_ITEMS[0].id);
   const { addToCart, triggerBasketDrop, setIsSearchOpen, showToast } = useStore();
 
   const wacoSignatureProducts = useMemo(
-    () => PRODUCTS.filter((p) => p.isWacoSignature),
+    () =>
+      PRODUCTS.filter((p) =>
+        ['waco-rg-ekpoma', 'waco-bl-01', 'waco-gc-01', 'waco-gc-03'].includes(p.id)
+      ),
     []
   );
 
+  // Showcase 8 distinct departments immediately in Popular This Week (eggs, beef, fruits, tomatoes, fish, palm oil, yam, Ekpoma rice)
   const topSelling = useMemo(
-    () => PRODUCTS.filter((p) => p.bestSelling).slice(0, 8),
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => p.bestSelling || p.featured),
+        8,
+        [
+          'dairy-eggs',
+          'meat-poultry',
+          'fruits',
+          'vegetables',
+          'fish-seafood',
+          'cooking-oils',
+          'yam-potatoes',
+          'beverages',
+          'breakfast',
+          'rice-grains',
+        ]
+      ),
+    []
+  );
+
+  // Dedicated all-aisle homepage shelves so every single product type appears while scrolling
+  const freshProduceAndEggs = useMemo(
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => FRESH_PRODUCE_AND_EGGS_CATS.includes(p.categoryId)),
+        8,
+        FRESH_PRODUCE_AND_EGGS_CATS
+      ),
+    []
+  );
+
+  const proteinsAndCooking = useMemo(
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => PROTEIN_AND_COOKING_CATS.includes(p.categoryId)),
+        8,
+        PROTEIN_AND_COOKING_CATS
+      ),
+    []
+  );
+
+  const bakeryDrinksHome = useMemo(
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => PANTRY_DRINKS_HOME_CATS.includes(p.categoryId)),
+        8,
+        PANTRY_DRINKS_HOME_CATS
+      ),
     []
   );
 
   const newArrivals = useMemo(
-    () => PRODUCTS.filter((p) => p.newArrival || p.trending).slice(0, 4),
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => p.newArrival || p.trending || !p.isWacoSignature),
+        4,
+        ['fruits', 'meat-poultry', 'dairy-eggs', 'snacks-confectionery', 'beverages', 'fish-seafood']
+      ),
     []
   );
 
   const discountedProducts = useMemo(
-    () => PRODUCTS.filter((p) => p.isDiscounted).slice(0, 4),
+    () =>
+      pickDiverseProducts(
+        PRODUCTS.filter((p) => p.isDiscounted),
+        4,
+        ['meat-poultry', 'cooking-oils', 'vegetables', 'fish-seafood', 'dairy-eggs', 'rice-grains']
+      ),
     []
   );
 
@@ -65,57 +171,9 @@ export function HomeSections() {
           className="w-full h-12 px-4 rounded-[12px] bg-white border border-[#135224]/15 flex items-center gap-3 text-left text-sm text-[#5a5d76] cursor-pointer"
         >
           <Search className="w-4 h-4 text-[#135224] shrink-0" />
-          <span className="truncate">Search rice, honey beans, garri, beef, tomatoes...</span>
+          <span className="truncate">Search rice, honey beans, fruits, beef, eggs...</span>
         </button>
       </div>
-
-      {/* 0. WACO Foods Signature Packaged Line Showcase */}
-      <section className="bg-[#f4efe4] border border-[#135224]/15 rounded-[14px] p-5 md:p-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center pb-7 mb-7 border-b border-[#135224]/12">
-          <div className="lg:col-span-7 space-y-3">
-            <span className="inline-flex items-center px-3 py-1 rounded-md bg-[#135224] text-[#f7d23a] text-[11px] font-semibold uppercase tracking-wider">
-              100% Natural · Hygienically Packaged
-            </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-[#135224] tracking-tight">
-              WACO Foods Signature Packaged Line
-            </h2>
-            <p className="text-sm md:text-[15px] text-[#16193a]/85 max-w-[58ch] leading-relaxed">
-              Directly from our processing line to your kitchen counter: stone-free Ekpoma Local Rice, sweet Honey Beans, crisp Ijebu &amp; Yellow Garri, Black Eye Beans, and iron-rich Plantain Flour—sealed cleanly in 2kg and 5kg packs.
-            </p>
-            <div className="pt-1 flex flex-wrap items-center gap-2.5">
-              <button
-                type="button"
-                onClick={(e) => handleAddBundle(BUNDLES[0].id, e)}
-                className="h-10 px-5 rounded-full bg-[#c61d23] text-white text-xs md:text-sm font-semibold hover:bg-[#135224] transition-colors cursor-pointer"
-              >
-                Add Quartet Bundle ({formatNaira(BUNDLES[0].bundlePrice)})
-              </button>
-              <Link
-                to="/shop"
-                className="h-10 px-5 rounded-full bg-white text-[#135224] border border-[#135224]/20 text-xs md:text-sm font-semibold inline-flex items-center gap-1.5 hover:bg-[#135224] hover:text-white transition-colors"
-              >
-                Explore All {PRODUCTS.length} Items <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5">
-            <div className="rounded-[12px] overflow-hidden bg-white p-2 border border-[#135224]/15 shadow-xs">
-              <SafeImage
-                src={STORE_IMAGES.brand.farmPoster}
-                alt="WACO Foods Quality From Our Farms To Your Table poster"
-                className="w-full h-[230px] md:h-[260px] object-cover object-top rounded-[8px]"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 md:gap-4">
-          {wacoSignatureProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
-        </div>
-      </section>
 
       {/* 1. Featured Categories Showcase (PricePally pure white photo tiles + mobile horizontal scroll) */}
       <section className="bg-white rounded-[14px] p-5 md:p-8">
@@ -227,11 +285,11 @@ export function HomeSections() {
         </div>
       </section>
 
-      {/* 2. Top-Selling Products */}
+      {/* 2. Top-Selling Products (Cross-Department Mix: Eggs, Beef, Fruits, Vegetables, Fish, Oils, Tubers & Rice) */}
       <section className="py-2 md:py-4">
         <div className="flex items-end justify-between gap-4 mb-4 md:mb-5 px-1">
           <div>
-            <p className="text-xs font-semibold text-[#135224]">Popular This Week</p>
+            <p className="text-xs font-semibold text-[#135224]">Popular This Week Across All Aisles</p>
             <h2 className="text-xl md:text-3xl font-semibold text-[#16193a] tracking-tight mt-0.5">
               Top-Selling Groceries
             </h2>
@@ -246,6 +304,126 @@ export function HomeSections() {
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
           {topSelling.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
+      {/* 2B. Fresh Fruits, Vegetables, Farm Eggs & Tubers Showcase */}
+      <section className="py-2 md:py-4">
+        <div className="flex items-end justify-between gap-4 mb-4 md:mb-5 px-1">
+          <div>
+            <p className="text-xs font-semibold text-[#135224]">Farm Harvest &amp; Dairy Fridge</p>
+            <h2 className="text-xl md:text-3xl font-semibold text-[#16193a] tracking-tight mt-0.5">
+              Fresh Fruits, Vegetables, Eggs &amp; Tubers
+            </h2>
+          </div>
+          <Link
+            to="/category/fruits"
+            className="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-[#d99b1e] hover:text-[#135224] transition-colors whitespace-nowrap shrink-0"
+          >
+            Shop fresh <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {freshProduceAndEggs.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
+      {/* 2C. Butcher Meat, Poultry, Fish, Oils & Spices Showcase */}
+      <section className="py-2 md:py-4">
+        <div className="flex items-end justify-between gap-4 mb-4 md:mb-5 px-1">
+          <div>
+            <p className="text-xs font-semibold text-[#135224]">Proteins &amp; Kitchen Seasoning</p>
+            <h2 className="text-xl md:text-3xl font-semibold text-[#16193a] tracking-tight mt-0.5">
+              Meat, Poultry, Fish, Oils &amp; Spices
+            </h2>
+          </div>
+          <Link
+            to="/category/meat-poultry"
+            className="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-[#d99b1e] hover:text-[#135224] transition-colors whitespace-nowrap shrink-0"
+          >
+            Shop proteins <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {proteinsAndCooking.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
+      {/* 2D. WACO Foods Signature Packaged Line Showcase */}
+      <section className="bg-[#f4efe4] border border-[#135224]/15 rounded-[14px] p-5 md:p-8">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center pb-7 mb-7 border-b border-[#135224]/12">
+          <div className="lg:col-span-7 space-y-3">
+            <span className="inline-flex items-center px-3 py-1 rounded-md bg-[#135224] text-[#f7d23a] text-[11px] font-semibold uppercase tracking-wider">
+              100% Natural · Hygienically Packaged
+            </span>
+            <h2 className="text-2xl md:text-3xl font-bold text-[#135224] tracking-tight">
+              WACO Foods Signature Packaged Line
+            </h2>
+            <p className="text-sm md:text-[15px] text-[#16193a]/85 max-w-[58ch] leading-relaxed">
+              Directly from our processing line to your kitchen counter: stone-free Ekpoma Local Rice, sweet Honey Beans, crisp Ijebu &amp; Yellow Garri, Black Eye Beans, and iron-rich Plantain Flour—sealed cleanly in 2kg and 5kg packs.
+            </p>
+            <div className="pt-1 flex flex-wrap items-center gap-2.5">
+              <button
+                type="button"
+                onClick={(e) => handleAddBundle(BUNDLES[0].id, e)}
+                className="h-10 px-5 rounded-full bg-[#c61d23] text-white text-xs md:text-sm font-semibold hover:bg-[#135224] transition-colors cursor-pointer"
+              >
+                Add Quartet Bundle ({formatNaira(BUNDLES[0].bundlePrice)})
+              </button>
+              <Link
+                to="/shop"
+                className="h-10 px-5 rounded-full bg-white text-[#135224] border border-[#135224]/20 text-xs md:text-sm font-semibold inline-flex items-center gap-1.5 hover:bg-[#135224] hover:text-white transition-colors"
+              >
+                Explore All {PRODUCTS.length} Items <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="rounded-[12px] overflow-hidden bg-white p-2 border border-[#135224]/15 shadow-xs">
+              <SafeImage
+                src={STORE_IMAGES.brand.farmPoster}
+                alt="WACO Foods Quality From Our Farms To Your Table poster"
+                className="w-full h-[230px] md:h-[260px] object-cover object-top rounded-[8px]"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {wacoSignatureProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      </section>
+
+      {/* 2E. Breakfast, Beverages, Snacks & Household Showcase */}
+      <section className="py-2 md:py-4">
+        <div className="flex items-end justify-between gap-4 mb-4 md:mb-5 px-1">
+          <div>
+            <p className="text-xs font-semibold text-[#135224]">Daily Pantry &amp; Home Care</p>
+            <h2 className="text-xl md:text-3xl font-semibold text-[#16193a] tracking-tight mt-0.5">
+              Bakery, Drinks, Snacks &amp; Household
+            </h2>
+          </div>
+          <Link
+            to="/category/beverages"
+            className="inline-flex items-center gap-1 text-xs md:text-sm font-semibold text-[#d99b1e] hover:text-[#135224] transition-colors whitespace-nowrap shrink-0"
+          >
+            View aisles <ArrowRight className="w-3.5 h-3.5 md:w-4 md:h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
+          {bakeryDrinksHome.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
