@@ -376,7 +376,7 @@ export function MotionHero() {
         style={{
           backgroundImage: `url(${STORE_IMAGES.heroSky})`,
         }}
-        className="order-1 relative w-full md:w-[71.1%] h-[58vh] md:h-[87vh] min-h-[420px] md:min-h-[460px] rounded-[14px] overflow-hidden bg-[#0d1650] bg-cover bg-center"
+        className="order-1 relative w-full md:w-[71.1%] min-h-[440px] h-[58vh] md:h-[87vh] md:min-h-[480px] rounded-[14px] overflow-hidden bg-[#0d1650] bg-cover bg-center"
       >
         {/* Top-left Hero Tagline & Actions */}
         <div className="relative z-[3] pl-[6.4%] pt-[7%] md:pt-[7.5%] pr-6 max-w-[38rem]">
@@ -468,13 +468,13 @@ export function MotionHero() {
       <aside
         id="card"
         style={{ backgroundColor: cardBg }}
-        className="order-3 md:order-2 relative w-full md:flex-1 h-[54vh] md:h-[87vh] min-h-[390px] md:min-h-[430px] rounded-[14px] overflow-hidden text-[#0c3b19] px-5 py-6 md:px-[1.4vw] md:py-[2.2vh] flex flex-col justify-between"
+        className="order-3 md:order-2 relative w-full md:flex-1 h-auto md:h-[87vh] md:min-h-[480px] rounded-[14px] overflow-hidden text-[#0c3b19] p-5 sm:p-6 md:px-[1.4vw] md:py-[2.2vh] flex flex-col justify-between gap-4 md:gap-3"
       >
-        <div className="relative z-[2]">
+        <div className="relative z-[2] shrink-0">
           <span className="inline-grid place-items-center h-7 px-3.5 rounded-[30px] bg-[#135224] text-[#f7d23a] text-[11px] font-semibold tracking-[0.04em]">
             WACO SIGNATURE LINE
           </span>
-          <p className="mt-4 text-[clamp(14px,1.02vw,17px)] leading-[1.5] font-medium text-[#141a4a]">
+          <p className="mt-3.5 text-[clamp(14px,1.02vw,17px)] leading-[1.48] font-medium text-[#141a4a]">
             100% natural, stone-free.
             <br />
             Ekpoma Rice, Honey Beans,
@@ -483,20 +483,20 @@ export function MotionHero() {
           </p>
         </div>
 
-        <div className="relative flex-1 flex items-center justify-center my-2 pointer-events-none">
+        <div className="relative flex-1 min-h-0 w-full flex items-center justify-center pointer-events-none">
           <img
             ref={yellowImgRef}
             src={STORE_IMAGES.yellowBox}
             alt="WACO curated market crate with plantains, tomatoes, rice and spices"
             onLoad={handleYellowBoxLoad}
             referrerPolicy="no-referrer"
-            className="w-[78%] sm:w-[88%] md:w-[114%] max-w-none aspect-square object-cover radial-feather-mask"
+            className="w-[68%] max-w-[240px] sm:max-w-[270px] md:w-auto md:h-auto md:max-w-full md:max-h-full aspect-square object-contain radial-feather-mask"
           />
         </div>
 
         <Link
           to="/offers"
-          className="relative z-[2] h-11 rounded-[40px] bg-[#c61d23] text-white grid place-items-center text-sm font-semibold hover:bg-[#135224] transition-colors duration-300"
+          className="relative z-[2] shrink-0 w-full h-11 rounded-[40px] bg-[#c61d23] text-white flex items-center justify-center px-5 text-sm font-semibold hover:bg-[#135224] transition-colors duration-300"
         >
           Shop Weekly Bundles
         </Link>
@@ -507,7 +507,7 @@ export function MotionHero() {
         ref={kitchenRef}
         id="kitchen"
         style={{ backgroundImage: `url(${STORE_IMAGES.kitchenScene})` }}
-        className={`order-2 md:order-3 md:basis-full relative w-full h-[54vh] md:h-[86vh] min-h-[380px] md:min-h-[430px] rounded-[14px] overflow-hidden bg-[#efe9de] bg-cover bg-center ${
+        className={`order-2 md:order-3 md:basis-full relative w-full min-h-[410px] h-[54vh] md:h-[86vh] md:min-h-[480px] rounded-[14px] overflow-hidden bg-[#efe9de] bg-cover bg-center ${
           landed ? 'kitchen-landed' : ''
         }`}
       >
