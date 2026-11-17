@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ChevronDown, ChevronRight, Clock, Leaf, Search, ShieldCheck, Store, Truck } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
@@ -13,7 +13,7 @@ import { SafeImage } from '../common/SafeImage';
 export function HomeSections() {
   const [selectedCategoryTab, setSelectedCategoryTab] = useState<string>('rice-grains');
   const [openFaqId, setOpenFaqId] = useState<string>(FAQ_ITEMS[0].id);
-  const { addToCart, setIsSearchOpen, showToast } = useStore();
+  const { addToCart, triggerBasketDrop, setIsSearchOpen, showToast } = useStore();
 
   const wacoSignatureProducts = useMemo(
     () => PRODUCTS.filter((p) => p.isWacoSignature),
@@ -41,10 +41,17 @@ export function HomeSections() {
     [activeCategory.id]
   );
 
-  const handleAddBundle = (bundleId: string) => {
+  const handleAddBundle = (bundleId: string, e?: React.MouseEvent<HTMLButtonElement>) => {
     const bundle = BUNDLES.find((b) => b.id === bundleId);
     if (!bundle) return;
     bundle.productIds.forEach((pid) => addToCart(pid, 1, undefined, true));
+    if (bundle.productIds[0]) {
+      const r = e?.currentTarget.getBoundingClientRect();
+      triggerBasketDrop(
+        bundle.productIds[0],
+        r ? { x: r.left, y: r.top, width: r.width, height: r.height } : undefined
+      );
+    }
     showToast('Bundle items added to bag', `${bundle.name} (${bundle.productIds.length} items)`, 'success');
   };
 
@@ -78,7 +85,7 @@ export function HomeSections() {
             <div className="pt-1 flex flex-wrap items-center gap-2.5">
               <button
                 type="button"
-                onClick={() => handleAddBundle(BUNDLES[0].id)}
+                onClick={(e) => handleAddBundle(BUNDLES[0].id, e)}
                 className="h-10 px-5 rounded-full bg-[#c61d23] text-white text-xs md:text-sm font-semibold hover:bg-[#135224] transition-colors cursor-pointer"
               >
                 Add Quartet Bundle ({formatNaira(BUNDLES[0].bundlePrice)})
@@ -203,7 +210,7 @@ export function HomeSections() {
             <div className="flex items-center gap-2 shrink-0">
               <button
                 type="button"
-                onClick={() => handleAddBundle(BUNDLES[1]?.id || BUNDLES[0].id)}
+                onClick={(e) => handleAddBundle(BUNDLES[1]?.id || BUNDLES[0].id, e)}
                 className="h-9 px-3.5 rounded-full bg-[#135224] text-white text-xs font-semibold hover:bg-[#0c3b19] transition-colors cursor-pointer"
               >
                 Quick Fill
@@ -271,7 +278,7 @@ export function HomeSections() {
             <div className="flex items-center gap-2.5">
               <button
                 type="button"
-                onClick={() => handleAddBundle(BUNDLES[0].id)}
+                onClick={(e) => handleAddBundle(BUNDLES[0].id, e)}
                 className="h-10 px-5 rounded-full bg-[#f7d23a] text-[#0c3b19] text-sm font-semibold hover:bg-white transition-colors cursor-pointer"
               >
                 Add Bundle to Bag

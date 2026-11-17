@@ -1,5 +1,6 @@
 import { NavLink, useLocation } from 'react-router-dom';
 import { ClipboardList, Home, ShoppingBag, Store, User } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useStore } from '../../context/StoreContext';
 
 export function MobileBottomNav() {
@@ -45,18 +46,25 @@ export function MobileBottomNav() {
 
         <button
           type="button"
+          data-cart-target="mobile"
           onClick={() => setIsCartOpen(true)}
           aria-label={`Open shopping bag (${cartCount} items)`}
           className="relative flex flex-col items-center justify-center min-h-[44px] gap-0.5 text-[10px] font-semibold text-[#135224] cursor-pointer"
         >
-          <div className="relative">
+          <motion.div
+            key={cartCount}
+            initial={{ scale: 0.88 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 460, damping: 20 }}
+            className="relative"
+          >
             <ShoppingBag className="w-5 h-5 stroke-[2]" />
             {cartCount > 0 && (
               <span className="absolute -top-1.5 -right-2 min-w-[16px] h-4 px-1 rounded-full bg-[#c61d23] text-white text-[9px] font-bold flex items-center justify-center tabular-nums">
                 {cartCount}
               </span>
             )}
-          </div>
+          </motion.div>
           <span>Cart</span>
         </button>
 

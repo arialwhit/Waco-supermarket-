@@ -21,7 +21,7 @@ export function SafeImage({
   if (!src || errored) {
     return (
       <div
-        className={`flex flex-col items-center justify-center bg-[#f4f2eb] text-[#16193a]/50 p-4 text-center ${className}`}
+        className={`flex flex-col items-center justify-center bg-white text-[#16193a]/50 p-4 text-center ${className}`}
         role="img"
         aria-label={alt || fallbackLabel || 'Product image'}
       >

@@ -1,12 +1,32 @@
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, Heart, Minus, Plus, Star } from 'lucide-react';
-import { Product } from '../../types/store';
+import { BasketDropOrigin, Product } from '../../types/store';
 import { useStore } from '../../context/StoreContext';
 import { formatNaira, getDiscountPercent } from '../../utils/format';
 import { SafeImage } from '../common/SafeImage';
 
+function captureOrigin(
+  imgContainer: HTMLElement | null,
+  fallbackBtn: HTMLElement | null
+): BasketDropOrigin | undefined {
+  const el = imgContainer || fallbackBtn;
+  if (!el) return undefined;
+  const r = el.getBoundingClientRect();
+  return { x: r.left, y: r.top, width: r.width, height: r.height };
+}
+
 export function ProductCard({ product }: { product: Product }) {
-  const { cart, addToCart, updateCartQuantity, toggleWishlist, isInWishlist } = useStore();
+  const {
+    cart,
+    addToCart,
+    triggerBasketDrop,
+    updateCartQuantity,
+    toggleWishlist,
+    isInWishlist,
+  } = useStore();
+  const imgStageRef = useRef<HTMLDivElement>(null);
+
   const defaultVariant = product.variants[0] || product.unit;
   const cartItem = cart.find(
     (item) => item.productId === product.id && item.variant === defaultVariant
@@ -14,17 +34,35 @@ export function ProductCard({ product }: { product: Product }) {
   const saved = isInWishlist(product.id);
   const discountPct = getDiscountPercent(product.price, product.originalPrice);
 
+  const handleQuickAdd = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const origin = captureOrigin(imgStageRef.current, e.currentTarget);
+    addToCart(product.id, 1, defaultVariant, false, origin);
+  };
+
+  const handleIncrement = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!cartItem) return;
+    const origin = captureOrigin(imgStageRef.current, e.currentTarget);
+    updateCartQuantity(product.id, defaultVariant, cartItem.quantity + 1);
+    triggerBasketDrop(product.id, origin);
+  };
+
   return (
     <article className="group bg-white rounded-[14px] p-3 flex flex-col justify-between border border-[#16193a]/8 transition-transform duration-200 ease-[cubic-bezier(0.2,0.8,0.2,1)] hover:-translate-y-0.5">
       <div>
-        {/* Crisp Pure White Product Photography Frame */}
-        <div className="relative aspect-[4/3] rounded-[12px] overflow-hidden bg-white border border-[#16193a]/10 p-1.5">
-          <Link to={`/product/${product.slug}`} className="block w-full h-full rounded-[8px] overflow-hidden bg-white">
+        {/* Crisp Pure White Product Photography Frame (#FFFFFF studio stage across all products) */}
+        <div
+          ref={imgStageRef}
+          className="relative aspect-[4/3] w-full rounded-[12px] overflow-hidden bg-[#ffffff] border border-[#16193a]/8 p-2.5 sm:p-3 flex items-center justify-center"
+        >
+          <Link
+            to={`/product/${product.slug}`}
+            className="flex items-center justify-center w-full h-full rounded-[8px] overflow-hidden bg-[#ffffff]"
+          >
             <SafeImage
               src={product.image}
               alt={product.name}
               fallbackLabel={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
+              className="w-full h-full object-contain bg-[#ffffff] mix-blend-multiply transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.05]"
             />
           </Link>
 
@@ -39,7 +77,7 @@ export function ProductCard({ product }: { product: Product }) {
             </span>
           ) : null}
 
-          {/* Top-right Wishlist Button (40px+ touch target) */}
+          {/* Top-right Wishlist Button */}
           <button
             type="button"
             onClick={() => toggleWishlist(product.id)}
@@ -47,13 +85,13 @@ export function ProductCard({ product }: { product: Product }) {
             className={`absolute top-2 right-2 w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 cursor-pointer shadow-xs ${
               saved
                 ? 'bg-[#c61d23] text-white'
-                : 'bg-white/95 text-[#16193a] border border-[#16193a]/10 hover:bg-[#135224] hover:text-white'
+                : 'bg-white text-[#16193a] border border-[#16193a]/10 hover:bg-[#135224] hover:text-white'
             }`}
           >
             <Heart className={`w-4 h-4 ${saved ? 'fill-current' : ''}`} />
           </button>
 
-          {/* PricePally-inspired Golden Circular Quick-Add Overlay CTA */}
+          {/* Golden Circular Quick-Add Overlay CTA / Active Forest Stepper */}
           {cartItem ? (
             <div
               className="absolute bottom-2 right-2 inline-flex items-center bg-[#135224] text-white rounded-full h-9 px-1.5 gap-1 shadow-md"
@@ -72,7 +110,7 @@ export function ProductCard({ product }: { product: Product }) {
               </span>
               <button
                 type="button"
-                onClick={() => updateCartQuantity(product.id, defaultVariant, cartItem.quantity + 1)}
+                onClick={handleIncrement}
                 aria-label="Increase quantity"
                 className="w-7 h-7 rounded-full flex items-center justify-center hover:bg-white/15 transition-colors cursor-pointer"
               >
@@ -82,7 +120,7 @@ export function ProductCard({ product }: { product: Product }) {
           ) : (
             <button
               type="button"
-              onClick={() => addToCart(product.id, 1, defaultVariant)}
+              onClick={handleQuickAdd}
               aria-label={`Add ${product.name} to shopping bag`}
               className="absolute bottom-2 right-2 w-10 h-10 rounded-full bg-[#e6b31e] text-[#0c3b19] flex items-center justify-center shadow-md hover:bg-[#135224] hover:text-white active:scale-95 transition-all duration-200 cursor-pointer"
             >

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Check, Heart, Minus, Plus, Star, ZoomIn, X } from 'lucide-react';
 import { getCategoryBySlug } from '../data/categories';
@@ -12,7 +12,8 @@ import { ProductCard } from '../components/product/ProductCard';
 export function ProductDetailPage() {
   const { slug = '' } = useParams();
   const product = getProductBySlug(slug);
-  const { addToCart, toggleWishlist, isInWishlist, showToast } = useStore();
+  const { addToCart, triggerBasketDrop, toggleWishlist, isInWishlist, showToast } = useStore();
+  const galleryRef = useRef<HTMLDivElement>(null);
 
   const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [selectedVariant, setSelectedVariant] = useState('');
@@ -67,9 +68,12 @@ export function ProductDetailPage() {
   const discountPct = getDiscountPercent(product.price, product.originalPrice);
   const activeImg = product.images[activeImageIdx] || product.image;
 
-  const handleAddTogether = () => {
+  const handleAddTogether = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const origin = { x: r.left, y: r.top, width: r.width, height: r.height };
     addToCart(product.id, 1, selectedVariant || product.unit, true);
     frequentlyBought.forEach((item) => addToCart(item.id, 1, item.variants[0], true));
+    triggerBasketDrop(product.id, origin);
     showToast(
       'Added 3 items to bag',
       `${product.name} + ${frequentlyBought.length} pantry pairings`,
@@ -91,11 +95,14 @@ export function ProductDetailPage() {
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-[var(--gap)] items-start">
         {/* Left Gallery */}
         <div className="lg:col-span-6 bg-white rounded-[14px] p-4 md:p-5">
-          <div className="relative aspect-[4/3] rounded-[12px] overflow-hidden bg-white border border-[#16193a]/10 p-2 group">
+          <div
+            ref={galleryRef}
+            className="relative aspect-[4/3] rounded-[12px] overflow-hidden bg-[#ffffff] border border-[#16193a]/10 p-3 flex items-center justify-center group"
+          >
             <SafeImage
               src={activeImg}
               alt={product.name}
-              className="w-full h-full object-cover rounded-[8px] transition-transform duration-500 group-hover:scale-[1.03]"
+              className="w-full h-full object-contain bg-[#ffffff] mix-blend-multiply rounded-[8px] transition-transform duration-500 group-hover:scale-[1.03]"
             />
             <button
               type="button"
@@ -240,7 +247,16 @@ export function ProductDetailPage() {
 
             <button
               type="button"
-              onClick={() => addToCart(product.id, qty, selectedVariant || product.unit)}
+              onClick={(e) => {
+                const el = galleryRef.current || e.currentTarget;
+                const r = el.getBoundingClientRect();
+                addToCart(product.id, qty, selectedVariant || product.unit, false, {
+                  x: r.left,
+                  y: r.top,
+                  width: r.width,
+                  height: r.height,
+                });
+              }}
               className="flex-1 min-w-[180px] h-11 px-6 rounded-full bg-[#f7d23a] text-[#141a4a] text-sm font-semibold hover:bg-[#141a4a] hover:text-white transition-colors cursor-pointer"
             >
               Add to Shopping Bag

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Heart, Menu, Search, ShoppingBag, User, X } from 'lucide-react';
+import { motion } from 'motion/react';
 import { useStore } from '../../context/StoreContext';
 import { CATEGORIES } from '../../data/categories';
 import { ANNOUNCEMENTS } from '../../data/mockStoreData';
@@ -232,15 +233,20 @@ export function Navbar() {
             <User className="w-[17px] h-[17px] stroke-[1.7]" />
           </Link>
 
-          <button
+          <motion.button
+            key={cartCount}
+            initial={{ scale: 0.94 }}
+            animate={{ scale: 1 }}
+            transition={{ type: 'spring', stiffness: 460, damping: 22 }}
             type="button"
+            data-cart-target="desktop"
             onClick={() => setIsCartOpen(true)}
             aria-label={`Shopping cart (${cartCount} items)`}
             className="inline-flex items-center gap-1.5 h-9 px-3.5 rounded-full bg-[#135224] text-white text-xs font-semibold hover:bg-[#0c3b19] transition-colors whitespace-nowrap shrink-0 cursor-pointer"
           >
             <ShoppingBag className="w-3.5 h-3.5 stroke-[2] text-[#f7d23a]" />
             <span className="tabular-nums">{cartCount}</span>
-          </button>
+          </motion.button>
         </div>
       </header>
 

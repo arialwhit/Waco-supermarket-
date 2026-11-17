@@ -6,6 +6,7 @@ import { CartDrawer } from './CartDrawer';
 import { SearchOverlay } from './SearchOverlay';
 import { ToastContainer } from './ToastContainer';
 import { MobileBottomNav } from './MobileBottomNav';
+import { BasketDrop } from '../common/BasketDrop';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
@@ -22,6 +23,7 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
       <MobileBottomNav />
       <CartDrawer />
       <SearchOverlay />
+      <BasketDrop />
       <ToastContainer />
     </div>
   );

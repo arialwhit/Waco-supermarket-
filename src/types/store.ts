@@ -154,3 +154,19 @@ export interface ToastMessage {
   description?: string;
   tone?: 'default' | 'success' | 'warning';
 }
+
+export interface BasketDropOrigin {
+  x: number;
+  y: number;
+  width?: number;
+  height?: number;
+}
+
+export interface BasketDropEvent {
+  id: string;
+  productId: string;
+  image: string;
+  name: string;
+  origin?: BasketDropOrigin;
+}
+

@@ -1,7 +1,17 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { INITIAL_MOCK_ORDERS } from '../data/mockStoreData';
 import { getProductById, PRODUCTS } from '../data/products';
-import { Address, CartItem, Order, Product, SavedItem, ToastMessage, UserProfile } from '../types/store';
+import {
+  Address,
+  BasketDropEvent,
+  BasketDropOrigin,
+  CartItem,
+  Order,
+  Product,
+  SavedItem,
+  ToastMessage,
+  UserProfile,
+} from '../types/store';
 
 interface StoreContextValue {
   cart: CartItem[];
@@ -12,11 +22,20 @@ interface StoreContextValue {
   recentSearches: string[];
   promoCode: string;
   toasts: ToastMessage[];
+  basketDrops: BasketDropEvent[];
   isCartOpen: boolean;
   isSearchOpen: boolean;
   setIsCartOpen: (open: boolean) => void;
   setIsSearchOpen: (open: boolean) => void;
-  addToCart: (productId: string, quantity?: number, variant?: string, silent?: boolean) => void;
+  addToCart: (
+    productId: string,
+    quantity?: number,
+    variant?: string,
+    silent?: boolean,
+    origin?: BasketDropOrigin
+  ) => void;
+  triggerBasketDrop: (productId: string, origin?: BasketDropOrigin) => void;
+  dismissBasketDrop: (id: string) => void;
   removeFromCart: (productId: string, variant?: string) => void;
   updateCartQuantity: (productId: string, variant: string, quantity: number) => void;
   saveItemForLater: (productId: string, variant: string) => void;
@@ -117,6 +136,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     readJson<string>(STORAGE_KEYS.promo, '')
   );
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [basketDrops, setBasketDrops] = useState<BasketDropEvent[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -188,7 +208,33 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     }, 3400);
   };
 
-  const addToCart = (productId: string, quantity = 1, variant?: string, silent = false) => {
+  const dismissBasketDrop = (id: string) => {
+    setBasketDrops((prev) => prev.filter((d) => d.id !== id));
+  };
+
+  const triggerBasketDrop = (productId: string, origin?: BasketDropOrigin) => {
+    const product = getProductById(productId);
+    if (!product) return;
+    const id = `drop-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    setBasketDrops((prev) => [
+      ...prev.slice(-4),
+      {
+        id,
+        productId: product.id,
+        image: product.image,
+        name: product.name,
+        origin,
+      },
+    ]);
+  };
+
+  const addToCart = (
+    productId: string,
+    quantity = 1,
+    variant?: string,
+    silent = false,
+    origin?: BasketDropOrigin
+  ) => {
     const product = getProductById(productId);
     if (!product) return;
     const chosenVariant = variant || product.variants[0] || product.unit;
@@ -202,6 +248,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
       return [...prev, { productId, variant: chosenVariant, quantity }];
     });
     if (!silent) {
+      triggerBasketDrop(productId, origin);
       showToast('Added to shopping bag', `${product.name} (${chosenVariant})`, 'success');
     }
   };
@@ -419,11 +466,14 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         recentSearches,
         promoCode,
         toasts,
+        basketDrops,
         isCartOpen,
         isSearchOpen,
         setIsCartOpen,
         setIsSearchOpen,
         addToCart,
+        triggerBasketDrop,
+        dismissBasketDrop,
         removeFromCart,
         updateCartQuantity,
         saveItemForLater,
