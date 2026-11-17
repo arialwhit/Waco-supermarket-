@@ -165,11 +165,13 @@ export function SearchOverlay() {
                       }}
                       className="flex items-center gap-3 p-2 rounded-[10px] hover:bg-[#e9e7df]/60 transition-colors"
                     >
-                      <SafeImage
-                        src={p.image}
-                        alt={p.name}
-                        className="w-14 h-12 rounded-lg object-cover shrink-0 bg-[#f4f2eb]"
-                      />
+                      <div className="w-14 h-12 rounded-lg bg-white border border-[#16193a]/10 p-0.5 shrink-0 overflow-hidden">
+                        <SafeImage
+                          src={p.image}
+                          alt={p.name}
+                          className="w-full h-full rounded-[5px] object-cover"
+                        />
+                      </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-sm font-semibold text-[#16193a] truncate">{p.name}</p>
                         <p className="text-xs text-[#5a5d76] tabular-nums">

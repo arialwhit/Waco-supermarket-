@@ -89,11 +89,13 @@ export function OrderDetailsPage() {
           <div className="divide-y divide-[#16193a]/10">
             {order.items.map((item, idx) => (
               <div key={`${item.productId}-${idx}`} className="py-3 flex items-center gap-3.5">
-                <SafeImage
-                  src={item.image}
-                  alt={item.name}
-                  className="w-16 h-14 rounded-lg object-cover bg-[#f4f2eb] shrink-0"
-                />
+                <div className="w-16 h-14 rounded-lg bg-white border border-[#16193a]/10 p-0.5 shrink-0 overflow-hidden">
+                  <SafeImage
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full rounded-[6px] object-cover"
+                  />
+                </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-[#16193a] truncate">{item.name}</p>
                   <p className="text-xs text-[#5a5d76] tabular-nums">

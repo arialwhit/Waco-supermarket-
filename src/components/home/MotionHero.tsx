@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { STORE_IMAGES } from '../../data/images';
+import { PRODUCTS } from '../../data/products';
 import { clamp } from '../../utils/format';
 
 const CACHE_SIZE = 560;
@@ -110,7 +111,6 @@ export function MotionHero() {
   const [cardBg, setCardBg] = useState('#f7d23a');
   const [landed, setLanded] = useState(false);
 
-  // Sample yellow background from yellow_grocery_box for seamless card integration
   const handleYellowBoxLoad = () => {
     const img = yellowImgRef.current;
     if (!img) return;
@@ -193,6 +193,7 @@ export function MotionHero() {
       const sr = skyEl.getBoundingClientRect();
       const kr = kitchenEl.getBoundingClientRect();
       const sy = window.scrollY;
+      const isMobile = window.innerWidth < 768;
 
       geom.Sx = sr.left;
       geom.Sy = sr.top + sy;
@@ -204,17 +205,23 @@ export function MotionHero() {
       geom.Kw = kr.width;
       geom.Kh = kr.height;
 
-      // Basket start in sky panel (right of center, clear of tagline and giant WACO wordmark)
-      geom.c0 = geom.Sh * 0.43;
-      geom.x0 = geom.Sx + geom.Sw * 0.78;
-      geom.y0 = geom.Sy + geom.Sh * 0.56;
+      // Responsive sky anchor: clear of top-left headline on both mobile portrait and 1440px desktop
+      const anchorXRatio = isMobile ? 0.77 : 0.78;
+      const anchorYRatio = isMobile ? 0.67 : 0.56;
+      geom.c0 = isMobile
+        ? clamp(Math.min(geom.Sh * 0.34, geom.Sw * 0.42), 118, 175)
+        : geom.Sh * 0.43;
+      geom.x0 = geom.Sx + geom.Sw * anchorXRatio;
+      geom.y0 = geom.Sy + geom.Sh * anchorYRatio;
 
       // Position balloons tied to top handles of the basket
       if (balloonsEl) {
-        const bw = geom.Sw * 0.28;
+        const bw = isMobile
+          ? clamp(geom.Sw * 0.35, 96, 145)
+          : geom.Sw * 0.28;
         const bh = (bw * 2048) / 1360;
-        const handleX = geom.Sw * 0.78;
-        const handleY = geom.Sh * 0.56 - geom.c0 * 0.34;
+        const handleX = geom.Sw * anchorXRatio;
+        const handleY = geom.Sh * anchorYRatio - geom.c0 * 0.34;
         balloonsEl.style.width = `${bw}px`;
         balloonsEl.style.height = `${bh}px`;
         balloonsEl.style.left = `${handleX - bw * 0.494}px`;
@@ -230,23 +237,38 @@ export function MotionHero() {
       const displayedH = natH * sc;
 
       // Empty travertine island surface spot on kitchen_counter_scene
-      const gx = geom.Kx + ox + 0.44 * natW * sc;
-      const gy = geom.Ky + oy + 0.73 * natH * sc;
+      const gx = isMobile
+        ? geom.Kx + geom.Kw * 0.5
+        : geom.Kx + ox + 0.44 * natW * sc;
+      const gy = isMobile
+        ? geom.Ky + geom.Kh * 0.78
+        : geom.Ky + oy + 0.73 * natH * sc;
 
-      geom.c1 = displayedH * 0.31;
+      geom.c1 = isMobile
+        ? clamp(displayedH * 0.33, 112, 160)
+        : displayedH * 0.31;
       geom.x1 = gx;
       geom.y1 = gy - geom.c1 * 0.88 + geom.c1 / 2;
 
       if (ktextEl) {
-        const hx = ox + 0.49 * natW * sc;
-        const hy = oy + 0.17 * natH * sc;
+        const hx = isMobile ? geom.Kw * 0.5 : ox + 0.49 * natW * sc;
+        const hy = isMobile ? geom.Kh * 0.22 : oy + 0.17 * natH * sc;
         ktextEl.style.left = `${hx}px`;
         ktextEl.style.top = `${hy}px`;
-        kitchenEl.style.setProperty('--kh', `${(displayedH * 0.036).toFixed(1)}px`);
-        kitchenEl.style.setProperty('--kp', `${(displayedH * 0.021).toFixed(1)}px`);
+        kitchenEl.style.setProperty(
+          '--kh',
+          `${(isMobile ? clamp(geom.Kw * 0.06, 20, 26) : displayedH * 0.036).toFixed(1)}px`
+        );
+        kitchenEl.style.setProperty(
+          '--kp',
+          `${(isMobile ? clamp(geom.Kw * 0.036, 13, 16) : displayedH * 0.021).toFixed(1)}px`
+        );
       }
 
-      geom.end = Math.max(200, geom.Ky - 0.095 * window.innerHeight);
+      geom.end = Math.max(
+        180,
+        geom.Ky - (isMobile ? 0.16 : 0.095) * window.innerHeight
+      );
       geom.m = Math.ceil(Math.max(geom.c0, geom.c1) * 1.05);
 
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -346,166 +368,159 @@ export function MotionHero() {
   }, []);
 
   return (
-    <div className="w-full">
-      {/* Row 1: Two-panel MotionSites Hero Split */}
-      <section
-        id="hero"
-        className="w-[var(--w)] mx-auto pt-[94px] md:pt-[10.2vh] flex flex-col md:flex-row gap-[var(--gap)]"
+    <div className="w-[var(--w)] mx-auto pt-[70px] sm:pt-[96px] md:pt-[10.2vh] flex flex-col md:flex-row md:flex-wrap gap-[var(--gap)]">
+      {/* Row 1 Left: Sky Panel (Always immediately above Kitchen Panel on both phone & desktop so basket drops cleanly across the beige gutter) */}
+      <div
+        ref={skyRef}
+        id="sky"
+        style={{
+          backgroundImage: `url(${STORE_IMAGES.heroSky})`,
+        }}
+        className="order-1 relative w-full md:w-[71.1%] h-[58vh] md:h-[87vh] min-h-[420px] md:min-h-[460px] rounded-[14px] overflow-hidden bg-[#0d1650] bg-cover bg-center"
       >
-        {/* Left Sky Panel */}
-        <div
-          ref={skyRef}
-          id="sky"
-          style={{
-            backgroundImage: `url(${STORE_IMAGES.heroSky})`,
-          }}
-          className="relative w-full md:flex-[0_0_71.1%] h-[68vh] md:h-[87vh] min-h-[460px] rounded-[14px] overflow-hidden bg-[#0d1650] bg-cover bg-center"
-        >
-          {/* Top-left Hero Tagline & Actions */}
-          <div className="relative z-[3] pl-[6.4%] pt-[8.2%] pr-6 max-w-[36rem]">
-            <h1 className="text-white text-[clamp(26px,2.75vw,44px)] font-medium leading-[1.06] tracking-[-0.015em] text-balance">
-              Fresh from market
-              <br />
-              to your kitchen.
-            </h1>
-            <p className="mt-3 text-white/80 text-sm md:text-[15px] max-w-[38ch] leading-relaxed">
-              Stone-free Nigerian grains, chilled meats, farm produce, and everyday pantry essentials from WACO&apos;s retail store.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-2.5">
-              <Link
-                to="/shop"
-                className="inline-flex items-center justify-center h-10 px-6 rounded-full bg-[#f7d23a] text-[#141a4a] text-sm font-semibold hover:bg-white transition-colors whitespace-nowrap shrink-0"
-              >
-                Shop Now
-              </Link>
-              <Link
-                to="/categories"
-                className="inline-flex items-center justify-center h-10 px-5 rounded-full bg-white/15 text-white text-sm font-medium hover:bg-white hover:text-[#141a4a] transition-colors whitespace-nowrap shrink-0"
-              >
-                Explore Categories
-              </Link>
-            </div>
-          </div>
-
-          {/* Glossy Yellow & Cream Balloons Cluster (custom vector SVG matching MotionSites origin) */}
-          <div
-            ref={balloonsRef}
-            id="balloons"
-            style={{ transformOrigin: '49.4% 94.6%' }}
-            className="absolute z-[2] pointer-events-none will-change-transform hidden sm:block"
-            aria-hidden="true"
-          >
-            <svg viewBox="0 0 136 205" className="w-full h-full overflow-visible">
-              {/* Strings converging to 49.4% 94.6% -> (67.2, 193.9) */}
-              <g stroke="rgba(255,255,255,0.65)" strokeWidth="1" fill="none">
-                <path d="M36,74 Q48,136 67.2,193.9" />
-                <path d="M56,56 Q60,126 67.2,193.9" />
-                <path d="M78,48 Q73,120 67.2,193.9" />
-                <path d="M100,72 Q84,132 67.2,193.9" />
-                <path d="M46,96 Q56,144 67.2,193.9" />
-                <path d="M90,98 Q78,144 67.2,193.9" />
-                <path d="M68,84 Q68,138 67.2,193.9" />
-              </g>
-              <defs>
-                <radialGradient id="bGold" cx="35%" cy="30%" r="68%">
-                  <stop offset="0%" stopColor="#fff3a8" />
-                  <stop offset="55%" stopColor="#f7d23a" />
-                  <stop offset="100%" stopColor="#d9a912" />
-                </radialGradient>
-                <radialGradient id="bGoldAlt" cx="35%" cy="30%" r="68%">
-                  <stop offset="0%" stopColor="#fff7c4" />
-                  <stop offset="60%" stopColor="#f9dc5c" />
-                  <stop offset="100%" stopColor="#e0b21a" />
-                </radialGradient>
-              </defs>
-              {/* Back balloons */}
-              <ellipse cx="36" cy="48" rx="19" ry="24" fill="url(#bGold)" />
-              <ellipse cx="100" cy="46" rx="19" ry="24" fill="url(#bGold)" />
-              <ellipse cx="56" cy="30" rx="20" ry="25" fill="url(#bGoldAlt)" />
-              <ellipse cx="80" cy="24" rx="20" ry="25" fill="url(#bGold)" />
-              {/* Front balloons */}
-              <ellipse cx="46" cy="70" rx="19" ry="24" fill="url(#bGoldAlt)" />
-              <ellipse cx="90" cy="72" rx="19" ry="24" fill="url(#bGoldAlt)" />
-              <ellipse cx="68" cy="56" rx="21" ry="26" fill="url(#bGold)" />
-              {/* String knot */}
-              <circle cx="67.2" cy="193.9" r="2.2" fill="#f7d23a" />
-            </svg>
-          </div>
-
-          {/* Sky Copy of Falling Market Basket Canvas */}
-          <canvas
-            ref={gSRef}
-            id="gS"
-            className="absolute left-0 top-0 z-[2] pointer-events-none will-change-transform hidden sm:block"
-          />
-
-          {/* Giant WACO Wordmark (z-3 sits ABOVE the falling basket) */}
-          <div
-            aria-hidden="true"
-            className="absolute left-[6%] bottom-[5%] z-[3] text-white font-semibold select-none pointer-events-none text-[24vw] sm:text-[18vw] md:text-[16.5vh] lg:text-[21vh] leading-[0.74] tracking-[-0.04em]"
-          >
-            WACO
+        {/* Top-left Hero Tagline & Actions */}
+        <div className="relative z-[3] pl-[6.4%] pt-[7%] md:pt-[7.5%] pr-6 max-w-[38rem]">
+          <p className="text-[10px] md:text-xs font-semibold tracking-[0.1em] uppercase text-[#f7d23a] mb-2">
+            WACO FOODS · NOURISHING NIGERIA. ENRICHING LIVES.
+          </p>
+          <h1 className="text-white text-[clamp(24px,2.75vw,44px)] font-medium leading-[1.06] tracking-[-0.015em] text-balance">
+            Quality from our farms
+            <br />
+            to your kitchen.
+          </h1>
+          <p className="mt-2.5 text-white/85 text-xs sm:text-sm md:text-[15px] max-w-[34ch] md:max-w-[38ch] leading-relaxed">
+            Hygienically packed Ekpoma Rice, Honey Beans, Garri &amp; Plantain Flour alongside daily produce from Apo Urban Market.
+          </p>
+          <div className="mt-4 md:mt-5 flex flex-wrap items-center gap-2">
+            <Link
+              to="/shop"
+              className="inline-flex items-center justify-center h-9 md:h-10 px-5 md:px-6 rounded-full bg-[#f7d23a] text-[#0c3b19] text-xs md:text-sm font-semibold hover:bg-white transition-colors whitespace-nowrap shrink-0"
+            >
+              Shop Now
+            </Link>
+            <Link
+              to="/categories"
+              className="inline-flex items-center justify-center h-9 md:h-10 px-4 md:px-5 rounded-full bg-[#135224] text-white text-xs md:text-sm font-medium hover:bg-[#0c3b19] transition-colors whitespace-nowrap shrink-0"
+            >
+              Explore 15 Aisles
+            </Link>
           </div>
         </div>
 
-        {/* Right Yellow Showcase Card */}
-        <aside
-          id="card"
-          style={{ backgroundColor: cardBg }}
-          className="relative w-full md:flex-1 h-[62vh] md:h-[87vh] min-h-[430px] rounded-[14px] overflow-hidden text-[#141a4a] px-5 py-6 md:px-[1.4vw] md:py-[2.2vh] flex flex-col justify-between"
+        {/* Glossy Yellow & Cream Balloons Cluster (visible on BOTH mobile & desktop) */}
+        <div
+          ref={balloonsRef}
+          id="balloons"
+          style={{ transformOrigin: '49.4% 94.6%' }}
+          className="absolute z-[2] pointer-events-none will-change-transform"
+          aria-hidden="true"
         >
-          <div className="relative z-[2]">
-            <span className="inline-grid place-items-center h-7 px-3.5 rounded-[30px] bg-white text-[#141a4a] text-[11px] font-semibold tracking-[0.02em]">
-              WEEKLY BOX
-            </span>
-            <p className="mt-4 text-[clamp(14px,1.02vw,17px)] leading-[1.5] font-medium">
-              Say hello to fresh.
-              <br />
-              Introducing WACO
-              <br />
-              Market Staples.
-            </p>
-          </div>
+          <svg viewBox="0 0 136 205" className="w-full h-full overflow-visible">
+            <g stroke="rgba(255,255,255,0.65)" strokeWidth="1" fill="none">
+              <path d="M36,74 Q48,136 67.2,193.9" />
+              <path d="M56,56 Q60,126 67.2,193.9" />
+              <path d="M78,48 Q73,120 67.2,193.9" />
+              <path d="M100,72 Q84,132 67.2,193.9" />
+              <path d="M46,96 Q56,144 67.2,193.9" />
+              <path d="M90,98 Q78,144 67.2,193.9" />
+              <path d="M68,84 Q68,138 67.2,193.9" />
+            </g>
+            <defs>
+              <radialGradient id="bGold" cx="35%" cy="30%" r="68%">
+                <stop offset="0%" stopColor="#fff3a8" />
+                <stop offset="55%" stopColor="#f7d23a" />
+                <stop offset="100%" stopColor="#d9a912" />
+              </radialGradient>
+              <radialGradient id="bGoldAlt" cx="35%" cy="30%" r="68%">
+                <stop offset="0%" stopColor="#fff7c4" />
+                <stop offset="60%" stopColor="#f9dc5c" />
+                <stop offset="100%" stopColor="#e0b21a" />
+              </radialGradient>
+            </defs>
+            <ellipse cx="36" cy="48" rx="19" ry="24" fill="url(#bGold)" />
+            <ellipse cx="100" cy="46" rx="19" ry="24" fill="url(#bGold)" />
+            <ellipse cx="56" cy="30" rx="20" ry="25" fill="url(#bGoldAlt)" />
+            <ellipse cx="80" cy="24" rx="20" ry="25" fill="url(#bGold)" />
+            <ellipse cx="46" cy="70" rx="19" ry="24" fill="url(#bGoldAlt)" />
+            <ellipse cx="90" cy="72" rx="19" ry="24" fill="url(#bGoldAlt)" />
+            <ellipse cx="68" cy="56" rx="21" ry="26" fill="url(#bGold)" />
+            <circle cx="67.2" cy="193.9" r="2.2" fill="#f7d23a" />
+          </svg>
+        </div>
 
-          <div className="relative flex-1 flex items-center justify-center my-2 pointer-events-none">
-            <img
-              ref={yellowImgRef}
-              src={STORE_IMAGES.yellowBox}
-              alt="WACO curated market crate with plantains, tomatoes, rice and spices"
-              onLoad={handleYellowBoxLoad}
-              referrerPolicy="no-referrer"
-              className="w-[92%] md:w-[114%] max-w-none aspect-square object-cover radial-feather-mask"
-            />
-          </div>
+        {/* Sky Copy of Falling Market Basket Canvas (visible on BOTH mobile & desktop) */}
+        <canvas
+          ref={gSRef}
+          id="gS"
+          className="absolute left-0 top-0 z-[2] pointer-events-none will-change-transform"
+        />
 
-          <Link
-            to="/offers"
-            className="relative z-[2] h-11 rounded-[40px] bg-white text-[#141a4a] grid place-items-center text-sm font-semibold hover:bg-[#141a4a] hover:text-white transition-colors duration-300"
-          >
-            Shop Weekly Bundles
-          </Link>
-        </aside>
-      </section>
+        {/* Giant WACO Wordmark */}
+        <div
+          aria-hidden="true"
+          className="absolute left-[6%] bottom-[5%] z-[3] text-white font-semibold select-none pointer-events-none text-[19vw] sm:text-[18vw] md:text-[16.5vh] lg:text-[21vh] leading-[0.74] tracking-[-0.04em]"
+        >
+          WACO
+        </div>
+      </div>
 
-      {/* Row 2: Kitchen Landing Panel (separated by --gap warm beige gutter) */}
+      {/* Row 1 Right on Desktop / Below Kitchen on Phone: Yellow Showcase Card */}
+      <aside
+        id="card"
+        style={{ backgroundColor: cardBg }}
+        className="order-3 md:order-2 relative w-full md:flex-1 h-[54vh] md:h-[87vh] min-h-[390px] md:min-h-[430px] rounded-[14px] overflow-hidden text-[#0c3b19] px-5 py-6 md:px-[1.4vw] md:py-[2.2vh] flex flex-col justify-between"
+      >
+        <div className="relative z-[2]">
+          <span className="inline-grid place-items-center h-7 px-3.5 rounded-[30px] bg-[#135224] text-[#f7d23a] text-[11px] font-semibold tracking-[0.04em]">
+            WACO SIGNATURE LINE
+          </span>
+          <p className="mt-4 text-[clamp(14px,1.02vw,17px)] leading-[1.5] font-medium text-[#141a4a]">
+            100% natural, stone-free.
+            <br />
+            Ekpoma Rice, Honey Beans,
+            <br />
+            Garri &amp; Plantain Flour.
+          </p>
+        </div>
+
+        <div className="relative flex-1 flex items-center justify-center my-2 pointer-events-none">
+          <img
+            ref={yellowImgRef}
+            src={STORE_IMAGES.yellowBox}
+            alt="WACO curated market crate with plantains, tomatoes, rice and spices"
+            onLoad={handleYellowBoxLoad}
+            referrerPolicy="no-referrer"
+            className="w-[78%] sm:w-[88%] md:w-[114%] max-w-none aspect-square object-cover radial-feather-mask"
+          />
+        </div>
+
+        <Link
+          to="/offers"
+          className="relative z-[2] h-11 rounded-[40px] bg-[#c61d23] text-white grid place-items-center text-sm font-semibold hover:bg-[#135224] transition-colors duration-300"
+        >
+          Shop Weekly Bundles
+        </Link>
+      </aside>
+
+      {/* Kitchen Landing Panel (Immediately below Sky Panel on mobile & full-width Row 2 on desktop) */}
       <section
         ref={kitchenRef}
         id="kitchen"
         style={{ backgroundImage: `url(${STORE_IMAGES.kitchenScene})` }}
-        className={`relative w-[var(--w)] h-[66vh] md:h-[86vh] min-h-[430px] mx-auto mt-[var(--gap)] rounded-[14px] overflow-hidden bg-[#efe9de] bg-cover bg-center ${
+        className={`order-2 md:order-3 md:basis-full relative w-full h-[54vh] md:h-[86vh] min-h-[380px] md:min-h-[430px] rounded-[14px] overflow-hidden bg-[#efe9de] bg-cover bg-center ${
           landed ? 'kitchen-landed' : ''
         }`}
       >
-        {/* Kitchen Copy of Falling Market Basket Canvas */}
+        {/* Kitchen Copy of Falling Market Basket Canvas (visible on BOTH mobile & desktop) */}
         <canvas
           ref={gKRef}
           id="gK"
-          className="absolute left-0 top-0 z-[2] pointer-events-none will-change-transform hidden sm:block"
+          className="absolute left-0 top-0 z-[2] pointer-events-none will-change-transform"
         />
 
-        {/* Subtle warm light scrim behind headline for consistent legibility across viewports */}
+        {/* Subtle warm light scrim behind headline */}
         <div
-          className="absolute inset-x-0 top-0 h-[44%] bg-gradient-to-b from-[#f4efe4]/80 via-[#f4efe4]/35 to-transparent pointer-events-none z-[3]"
+          className="absolute inset-x-0 top-0 h-[48%] bg-gradient-to-b from-[#f4efe4]/85 via-[#f4efe4]/45 to-transparent pointer-events-none z-[3]"
           aria-hidden="true"
         />
 
@@ -513,27 +528,27 @@ export function MotionHero() {
         <div
           ref={ktextRef}
           id="ktext"
-          className="absolute left-1/2 top-[18%] -translate-x-1/2 -translate-y-1/2 text-center text-[#16193a] z-[4] w-[88%] md:w-auto md:whitespace-nowrap"
+          className="absolute left-1/2 top-[20%] -translate-x-1/2 -translate-y-1/2 text-center text-[#16193a] z-[4] w-[90%] md:w-auto md:whitespace-nowrap"
         >
           <h2
-            style={{ fontSize: 'var(--kh, clamp(22px, 2.5vw, 38px))' }}
+            style={{ fontSize: 'var(--kh, clamp(20px, 2.5vw, 38px))' }}
             className="kitchen-reveal-item font-semibold tracking-[-0.015em] leading-[1.18]"
           >
             Cooks for your family. Fits your budget.
           </h2>
           <p
             style={{ fontSize: 'var(--kp, clamp(13px, 1.25vw, 19px))' }}
-            className="kitchen-reveal-item kitchen-reveal-delay mt-2 font-medium leading-[1.38] text-[#16193a]/85"
+            className="kitchen-reveal-item kitchen-reveal-delay mt-1.5 md:mt-2 font-medium leading-[1.38] text-[#16193a]/85"
           >
-            From our retail aisles straight to your counter —
-            <br className="hidden sm:inline" /> 120+ Nigerian pantry &amp; fresh food staples ready today.
+            From Shop F1008, Apo Urban Market straight to your counter —
+            <br className="hidden sm:inline" /> {PRODUCTS.length} verified Nigerian pantry &amp; fresh food staples ready today.
           </p>
-          <div className="kitchen-reveal-item kitchen-reveal-delay mt-4">
+          <div className="kitchen-reveal-item kitchen-reveal-delay mt-3 md:mt-4">
             <Link
               to="/shop"
-              className="inline-flex items-center justify-center h-10 px-6 rounded-full bg-[#141a4a] text-white text-xs md:text-sm font-semibold hover:bg-[#3a49c9] transition-colors"
+              className="inline-flex items-center justify-center h-9 md:h-10 px-5 md:px-6 rounded-full bg-[#135224] text-white text-xs md:text-sm font-semibold hover:bg-[#0c3b19] transition-colors"
             >
-              Browse All 124 Products
+              Browse All {PRODUCTS.length} Products
             </Link>
           </div>
         </div>

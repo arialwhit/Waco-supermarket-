@@ -61,7 +61,7 @@ export function CategoryDetailPage() {
 
       {/* Category Split Banner */}
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-[var(--gap)] items-stretch">
-        <div className="lg:col-span-7 bg-[#141a4a] text-white rounded-[14px] p-6 md:p-10 flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-[#135224] text-white rounded-[14px] p-6 md:p-10 flex flex-col justify-between">
           <div>
             <span className="text-xs font-semibold text-[#f7d23a] tabular-nums">
               Department · {categoryProducts.length} products
@@ -69,7 +69,7 @@ export function CategoryDetailPage() {
             <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
               {category.name}
             </h1>
-            <p className="mt-3 text-sm md:text-base text-white/80 max-w-[50ch] leading-relaxed">
+            <p className="mt-3 text-sm md:text-base text-white/85 max-w-[50ch] leading-relaxed">
               {category.description}
             </p>
           </div>
@@ -80,7 +80,7 @@ export function CategoryDetailPage() {
               onClick={() => setSelectedSub('All')}
               className={`h-9 px-4 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
                 selectedSub === 'All'
-                  ? 'bg-[#f7d23a] text-[#141a4a]'
+                  ? 'bg-[#f7d23a] text-[#0c3b19]'
                   : 'bg-white/15 text-white hover:bg-white/25'
               }`}
             >
@@ -93,7 +93,7 @@ export function CategoryDetailPage() {
                 onClick={() => setSelectedSub(sub)}
                 className={`h-9 px-4 rounded-full text-xs font-semibold transition-colors cursor-pointer ${
                   selectedSub === sub
-                    ? 'bg-[#f7d23a] text-[#141a4a]'
+                    ? 'bg-[#f7d23a] text-[#0c3b19]'
                     : 'bg-white/15 text-white hover:bg-white/25'
                 }`}
               >

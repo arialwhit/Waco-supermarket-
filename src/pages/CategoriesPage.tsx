@@ -30,11 +30,11 @@ export function CategoriesPage() {
               className="group bg-white rounded-[14px] p-4 flex flex-col justify-between transition-transform duration-200 hover:-translate-y-0.5"
             >
               <div>
-                <div className="aspect-[4/3] rounded-[10px] overflow-hidden bg-[#f4f2eb]">
+                <div className="aspect-[4/3] rounded-[10px] overflow-hidden bg-white border border-[#16193a]/10 p-1.5">
                   <SafeImage
                     src={category.image}
                     alt={category.name}
-                    className="w-full h-full object-cover transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
+                    className="w-full h-full object-cover rounded-[7px] transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)] group-hover:scale-[1.04]"
                   />
                 </div>
                 <div className="mt-4 px-1">

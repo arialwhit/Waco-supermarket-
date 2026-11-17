@@ -91,48 +91,55 @@ export function ProductDetailPage() {
       <section className="grid grid-cols-1 lg:grid-cols-12 gap-[var(--gap)] items-start">
         {/* Left Gallery */}
         <div className="lg:col-span-6 bg-white rounded-[14px] p-4 md:p-5">
-          <div className="relative aspect-[4/3] rounded-[12px] overflow-hidden bg-[#f4f2eb] group">
+          <div className="relative aspect-[4/3] rounded-[12px] overflow-hidden bg-white border border-[#16193a]/10 p-2 group">
             <SafeImage
               src={activeImg}
               alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              className="w-full h-full object-cover rounded-[8px] transition-transform duration-500 group-hover:scale-[1.03]"
             />
             <button
               type="button"
               onClick={() => setZoomOpen(true)}
               aria-label="Zoom product photograph"
-              className="absolute bottom-3 right-3 h-9 px-3.5 rounded-full bg-white/95 text-[#16193a] text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-[#141a4a] hover:text-white transition-colors cursor-pointer"
+              className="absolute bottom-4 right-4 h-9 px-3.5 rounded-full bg-white text-[#16193a] border border-[#16193a]/10 text-xs font-semibold inline-flex items-center gap-1.5 hover:bg-[#135224] hover:text-white transition-colors cursor-pointer"
             >
               <ZoomIn className="w-3.5 h-3.5" /> Zoom
             </button>
           </div>
 
-          <div className="mt-3 grid grid-cols-3 gap-2.5">
-            {product.images.map((imgUrl, idx) => (
-              <button
-                key={`${imgUrl}-${idx}`}
-                type="button"
-                onClick={() => setActiveImageIdx(idx)}
-                className={`aspect-[4/3] rounded-[10px] overflow-hidden border-2 transition-colors cursor-pointer ${
-                  activeImageIdx === idx
-                    ? 'border-[#141a4a]'
-                    : 'border-transparent opacity-75 hover:opacity-100'
-                }`}
-              >
-                <SafeImage
-                  src={imgUrl}
-                  alt={`${product.name} view ${idx + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </button>
-            ))}
-          </div>
+          {product.images.length > 1 && (
+            <div className="mt-3 grid grid-cols-3 gap-2.5">
+              {product.images.map((imgUrl, idx) => (
+                <button
+                  key={`${imgUrl}-${idx}`}
+                  type="button"
+                  onClick={() => setActiveImageIdx(idx)}
+                  className={`aspect-[4/3] rounded-[10px] overflow-hidden bg-white p-1 border-2 transition-colors cursor-pointer ${
+                    activeImageIdx === idx
+                      ? 'border-[#135224]'
+                      : 'border-[#16193a]/10 opacity-80 hover:opacity-100'
+                  }`}
+                >
+                  <SafeImage
+                    src={imgUrl}
+                    alt={`${product.name} view ${idx + 1}`}
+                    className="w-full h-full object-cover rounded-[6px]"
+                  />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Right Purchase Details */}
         <div className="lg:col-span-6 bg-white rounded-[14px] p-6 md:p-8 space-y-5">
           <div>
             <div className="flex flex-wrap items-center gap-2 text-xs text-[#5a5d76]">
+              {product.isWacoSignature && (
+                <span className="bg-[#135224] text-[#f7d23a] text-[10px] font-semibold px-2 py-0.5 rounded uppercase tracking-wider">
+                  WACO Signature
+                </span>
+              )}
               <span>{category?.name || product.subcategory}</span>
               <span aria-hidden="true">·</span>
               <span>{product.subcategory}</span>
@@ -148,7 +155,7 @@ export function ProductDetailPage() {
             </h1>
 
             <div className="mt-4 flex items-baseline gap-3">
-              <span className="text-3xl font-semibold text-[#141a4a] tabular-nums">
+              <span className="text-3xl font-semibold text-[#135224] tabular-nums">
                 {formatNaira(product.price)}
               </span>
               {product.originalPrice && product.originalPrice > product.price && (
@@ -156,7 +163,7 @@ export function ProductDetailPage() {
                   <span className="text-base text-[#5a5d76] line-through tabular-nums">
                     {formatNaira(product.originalPrice)}
                   </span>
-                  <span className="text-xs font-semibold text-[#141a4a] bg-[#f7d23a] px-2.5 py-0.5 rounded-full">
+                  <span className="text-xs font-semibold text-white bg-[#c61d23] px-2.5 py-0.5 rounded-md">
                     Save {discountPct}%
                   </span>
                 </>

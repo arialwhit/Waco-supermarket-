@@ -5,6 +5,7 @@ import { Footer } from './Footer';
 import { CartDrawer } from './CartDrawer';
 import { SearchOverlay } from './SearchOverlay';
 import { ToastContainer } from './ToastContainer';
+import { MobileBottomNav } from './MobileBottomNav';
 
 export function MainLayout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
@@ -16,8 +17,9 @@ export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen flex flex-col bg-[#e9e7df] text-[#16193a]">
       <Navbar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 pb-16 md:pb-0">{children}</main>
       <Footer />
+      <MobileBottomNav />
       <CartDrawer />
       <SearchOverlay />
       <ToastContainer />

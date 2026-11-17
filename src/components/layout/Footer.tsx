@@ -19,19 +19,36 @@ export function Footer() {
 
   return (
     <footer className="w-[var(--w)] mx-auto mt-[var(--gap)] mb-8">
-      <div className="bg-[#141a4a] text-white rounded-[14px] p-6 md:p-10 lg:p-12">
+      <div className="bg-[#0c3b19] text-white rounded-[14px] p-6 md:p-10 lg:p-12">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-10 border-b border-white/15">
           <div className="lg:col-span-5">
-            <Link to="/" className="text-3xl font-semibold tracking-[-0.03em] text-white">
-              WACO
+            <Link to="/" className="inline-flex items-center gap-3">
+              <div className="bg-white rounded-[10px] px-2.5 py-1.5 inline-flex items-center justify-center">
+                <img
+                  src="/assets/waco/waco-logo-transparent.png"
+                  alt="WACO Foods"
+                  className="h-9 w-auto object-contain"
+                />
+              </div>
+              <div>
+                <span className="block text-2xl font-bold tracking-[-0.03em] text-white leading-none">
+                  WACO <span className="text-[#f7d23a]">FOODS</span>
+                </span>
+                <span className="block text-[10px] font-semibold tracking-wider text-[#f7d23a] uppercase mt-1">
+                  Nourishing Nigeria · Enriching Lives
+                </span>
+              </div>
             </Link>
-            <p className="mt-3 text-sm text-white/75 max-w-[40ch] leading-relaxed">
-              Your neighborhood retail supermarket brought online. Fresh Nigerian produce, stone-free staples, chilled proteins, and household care.
+            <p className="mt-4 text-sm text-white/80 max-w-[42ch] leading-relaxed">
+              Quality from our farms to your table. Hygienically packaged Ekpoma Local Rice, Honey Beans, Garri &amp; Plantain Flour plus daily market produce from Shop F1008, Apo Urban Market, Abuja.
+            </p>
+            <p className="mt-2.5 text-xs text-[#f7d23a] font-medium">
+              +234 811 786 2336 · +234 706 930 2350 · wacofoodsltd@gmail.com
             </p>
 
             <form onSubmit={handleSubscribe} className="mt-6 max-w-md">
               <label htmlFor="footer-newsletter" className="block text-xs font-semibold text-[#f7d23a] mb-2">
-                Weekly Pantry &amp; Harvest Notes
+                Weekly Harvest &amp; Pantry Dispatch Notes
               </label>
               <div className="flex gap-2">
                 <input
@@ -44,7 +61,7 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="h-11 px-5 rounded-full bg-[#f7d23a] text-[#141a4a] text-sm font-semibold whitespace-nowrap shrink-0 hover:bg-white transition-colors cursor-pointer"
+                  className="h-11 px-5 rounded-full bg-[#f7d23a] text-[#0c3b19] text-sm font-semibold whitespace-nowrap shrink-0 hover:bg-white transition-colors cursor-pointer"
                 >
                   Subscribe
                 </button>
@@ -81,8 +98,8 @@ export function Footer() {
             <div>
               <p className="font-semibold text-[#f7d23a] mb-3">Store &amp; Policies</p>
               <ul className="space-y-2 text-white/80">
-                <li><Link to="/about" className="hover:text-white">About WACO</Link></li>
-                <li><Link to="/contact" className="hover:text-white">Contact &amp; Store Hours</Link></li>
+                <li><Link to="/about" className="hover:text-white">About WACO Foods</Link></li>
+                <li><Link to="/contact" className="hover:text-white">Shop F1008, Apo Abuja</Link></li>
                 <li><Link to="/delivery" className="hover:text-white">Delivery Information</Link></li>
                 <li><Link to="/faq" className="hover:text-white">Help &amp; FAQ</Link></li>
                 <li><Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
@@ -93,9 +110,9 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-white/65">
-          <p>© 2026 WACO Supermarket. All product prices, delivery windows, and order flows are illustrative frontend demos.</p>
-          <p className="shrink-0">Customer-Facing Storefront · Phase 1</p>
+        <div className="pt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-white/70">
+          <p>© 2026 WACO Foods Ltd · Shop F1008, Apo Urban Market, Apo, Abuja, FCT, Nigeria.</p>
+          <p className="shrink-0 text-[#f7d23a]">@wacofoods · wacofoods.ng</p>
         </div>
       </div>
     </footer>

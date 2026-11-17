@@ -46,6 +46,7 @@ export interface Product {
   bestSelling: boolean;
   newArrival?: boolean;
   trending?: boolean;
+  isWacoSignature?: boolean;
   isDiscounted: boolean;
   tags: string[];
   specifications: ProductSpecification[];

@@ -8,9 +8,9 @@ export const CATEGORIES: Category[] = [
     name: 'Rice & Grains',
     shortName: 'Rice & Grains',
     description:
-      'Stone-free local Ofada, parboiled long-grain rice, golden maize, millet, and sorghum for everyday Nigerian kitchens.',
+      'Hygienically packaged WACO Foods Local Rice (Ekpoma), stone-free Ofada, parboiled long-grain rice, aged Basmati, and golden maize.',
     image: STORE_IMAGES.categories['rice-grains'],
-    subcategories: ['Parboiled Rice', 'Local Ofada', 'Basmati', 'Grains & Maize'],
+    subcategories: ['WACO Local Rice', 'Parboiled Rice', 'Local Ofada', 'Basmati', 'Grains & Maize'],
     featured: true,
   },
   {
@@ -19,20 +19,20 @@ export const CATEGORIES: Category[] = [
     name: 'Beans & Legumes',
     shortName: 'Beans',
     description:
-      'Clean-picked Oloyin honey beans, drum brown beans, white black-eyed peas, melon seeds (egusi), and groundnuts.',
+      'Signature WACO Foods Honey Beans (5kg), Black Eye Beans (2kg & 5kg), Kano Drum Beans, hand-picked Egusi, and Ogbono seeds.',
     image: STORE_IMAGES.categories['beans-legumes'],
-    subcategories: ['Honey Beans', 'White Beans', 'Egusi & Ogbono', 'Nuts'],
+    subcategories: ['WACO Honey Beans', 'WACO Black Eye Beans', 'Drum Beans', 'Egusi & Ogbono'],
     featured: true,
   },
   {
     id: 'garri-cassava',
     slug: 'garri-cassava',
-    name: 'Garri & Cassava',
-    shortName: 'Garri & Swallow',
+    name: 'Garri, Flour & Swallows',
+    shortName: 'Garri & Flour',
     description:
-      'Crisp sour Ijebu garri, rich yellow palm-oil garri, fufu flour, lafun, semolina, and yam flour (amala).',
+      'WACO Foods sealed Ijebu Garri (2kg), Yellow Garri (2kg & 5kg), Premium Plantain Flour (2kg), and Ibadan Elubo yam flour.',
     image: STORE_IMAGES.categories['garri-cassava'],
-    subcategories: ['Yellow Garri', 'Ijebu White Garri', 'Swallow Flours'],
+    subcategories: ['WACO Ijebu Garri', 'WACO Yellow Garri', 'WACO Plantain Flour', 'Swallow Flours'],
     featured: true,
   },
   {
@@ -41,7 +41,7 @@ export const CATEGORIES: Category[] = [
     name: 'Yam & Potatoes',
     shortName: 'Yam & Tubers',
     description:
-      'Firm Benue Puna yam tubers, Plateau Irish potatoes, orange sweet potatoes, and cocoyam.',
+      'Firm Benue Puna yam tubers, Plateau fresh Irish potatoes, and orange-flesh honey sweet potatoes.',
     image: STORE_IMAGES.categories['yam-potatoes'],
     subcategories: ['Puna Yam', 'Irish Potatoes', 'Sweet Potatoes'],
     featured: true,
@@ -52,9 +52,9 @@ export const CATEGORIES: Category[] = [
     name: 'Fresh Vegetables',
     shortName: 'Vegetables',
     description:
-      'Farm-sorted plum tomatoes, ata rodo, tatashe, red onions, okra, ugu, efo shoko, and aromatic herbs.',
+      'Grade-A plum tomatoes, fiery ata rodo, sweet bell peppers, crunchy carrots, green garden peas, red onions, okra, and fresh ugu.',
     image: STORE_IMAGES.categories.vegetables,
-    subcategories: ['Tomatoes & Peppers', 'Onions & Garlic', 'Leafy Greens', 'Okra & Pods'],
+    subcategories: ['Tomatoes & Peppers', 'Roots & Pods', 'Onions & Bulbs', 'Leafy Greens'],
     featured: true,
   },
   {
@@ -63,9 +63,9 @@ export const CATEGORIES: Category[] = [
     name: 'Fresh Fruits',
     shortName: 'Fruits',
     description:
-      'Sweet ripe and green plantains, sugarloaf pineapples, pawpaw, mangoes, watermelons, and citrus.',
+      'Sweet semi-ripe plantains, Ogun sugarloaf pineapples, juicy watermelons, Benue oranges, and crisp Gala apples.',
     image: STORE_IMAGES.categories.fruits,
-    subcategories: ['Plantains & Bananas', 'Tropical Fruits', 'Citrus & Apples'],
+    subcategories: ['Plantains', 'Tropical Fruits', 'Citrus & Apples'],
     featured: true,
   },
   {
@@ -74,9 +74,9 @@ export const CATEGORIES: Category[] = [
     name: 'Meat & Poultry',
     shortName: 'Meat & Poultry',
     description:
-      'Hygienically dressed whole chicken, turkey cuts, prime boneless beef, shaki, and fresh goat meat.',
+      'Boneless fresh cow meat (beef), dressed broiler chicken, fresh cut goat meat (chevon), and meaty turkey cuts.',
     image: STORE_IMAGES.categories['meat-poultry'],
-    subcategories: ['Beef Cuts', 'Poultry', 'Goat Meat', 'Assorted'],
+    subcategories: ['Beef Cuts', 'Poultry', 'Goat Meat'],
     featured: true,
   },
   {
@@ -85,7 +85,7 @@ export const CATEGORIES: Category[] = [
     name: 'Fish & Seafood',
     shortName: 'Fish & Seafood',
     description:
-      'Fresh Titus mackerel, croaker, kiln-smoked mangala catfish, stockfish ears, and whole crayfish.',
+      'Whole sun-dried WACO crayfish, kiln-smoked mangala catfish, fresh Titus mackerel, Norwegian stockfish, and Atlantic king prawns.',
     image: STORE_IMAGES.categories['fish-seafood'],
     subcategories: ['Fresh Fish', 'Smoked Fish', 'Stockfish & Crayfish'],
     featured: true,
@@ -96,7 +96,7 @@ export const CATEGORIES: Category[] = [
     name: 'Cooking Oils',
     shortName: 'Cooking Oils',
     description:
-      'Pure unrefined red palm oil, double-refined vegetable oil, groundnut oil, and cold-pressed coconut oil.',
+      'Pure unrefined Edo red palm oil, double-refined vegetable oil, and cold-pressed virgin coconut oil.',
     image: STORE_IMAGES.categories['cooking-oils'],
     subcategories: ['Red Palm Oil', 'Vegetable Oil', 'Specialty Oils'],
     featured: false,
@@ -107,7 +107,7 @@ export const CATEGORIES: Category[] = [
     name: 'Spices & Seasonings',
     shortName: 'Spices',
     description:
-      'Fermented iru (locust beans), suya spice, Cameroon pepper, curry, thyme, ginger, and stock cubes.',
+      'Fermented iru (locust beans), Hausa suya spice (yaji), bouillon seasoning cubes, curry, thyme, and pepper soup spice.',
     image: STORE_IMAGES.categories['spices-seasonings'],
     subcategories: ['Local Condiments', 'Spice Blends', 'Stock & Bouillon'],
     featured: false,
@@ -118,9 +118,9 @@ export const CATEGORIES: Category[] = [
     name: 'Dairy & Eggs',
     shortName: 'Dairy & Eggs',
     description:
-      'Crates of fresh brown farm eggs, evaporated milk, powdered milk tins, salted butter, and Greek yogurt.',
+      'Crates of fresh brown farm eggs, full-cream evaporated milk, Irish salted butter, and unsweetened Greek yogurt.',
     image: STORE_IMAGES.categories['dairy-eggs'],
-    subcategories: ['Farm Eggs', 'Milk & Cream', 'Butter & Cheese'],
+    subcategories: ['Farm Eggs', 'Milk & Cream', 'Butter & Yogurt'],
     featured: false,
   },
   {
@@ -129,9 +129,9 @@ export const CATEGORIES: Category[] = [
     name: 'Beverages',
     shortName: 'Beverages',
     description:
-      'Brewed hibiscus zobo, malt drinks, cocoa beverage tins, table water packs, and pressed fruit juices.',
+      'Chilled spiced hibiscus zobo, classic malt drinks, chocolate cocoa malt powder, and pressed fruit juices.',
     image: STORE_IMAGES.categories.beverages,
-    subcategories: ['Juices & Zobo', 'Malt & Soft Drinks', 'Hot Beverages'],
+    subcategories: ['Juices & Zobo', 'Malt Drinks', 'Hot Beverages'],
     featured: false,
   },
   {
@@ -140,9 +140,9 @@ export const CATEGORIES: Category[] = [
     name: 'Snacks & Confectionery',
     shortName: 'Snacks',
     description:
-      'Crispy plantain chips, crunchy chin-chin, roasted bottle groundnuts, kulikuli, and family biscuits.',
+      'Crispy golden plantain chips, crunchy nutmeg chin-chin, roasted bottle groundnuts, and spiced Nigerian treats.',
     image: STORE_IMAGES.categories['snacks-confectionery'],
-    subcategories: ['Local Snacks', 'Nuts & Seeds', 'Biscuits & Treats'],
+    subcategories: ['Local Snacks', 'Nuts & Peanuts'],
     featured: false,
   },
   {
@@ -151,7 +151,7 @@ export const CATEGORIES: Category[] = [
     name: 'Breakfast & Bakery',
     shortName: 'Breakfast',
     description:
-      'Soft Lagos Agege bread, whole-grain rolled oats, custard tins, pure wildflower honey, and crunchy granola.',
+      'Soft Lagos Agege bread loaves, hearty wholegrain rolled oats, and pure raw Taraba wildflower honey.',
     image: STORE_IMAGES.categories.breakfast,
     subcategories: ['Bakery Bread', 'Cereals & Oats', 'Spreads & Honey'],
     featured: false,
@@ -162,7 +162,7 @@ export const CATEGORIES: Category[] = [
     name: 'Household Essentials',
     shortName: 'Household',
     description:
-      'Laundry detergents, dishwashing liquids, bleach, multi-surface sprays, kitchen rolls, and bath tissues.',
+      'Fast-action laundry detergent, citrus grease-cutting dish soap, and soft quilted 2-ply bath tissues.',
     image: STORE_IMAGES.categories.household,
     subcategories: ['Laundry Care', 'Kitchen Cleaning', 'Paper & Tissue'],
     featured: false,

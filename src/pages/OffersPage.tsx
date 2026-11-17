@@ -24,21 +24,21 @@ export function OffersPage() {
       <Breadcrumbs items={[{ label: 'Special Offers & Bundles' }]} />
 
       {/* Main Promo Banner */}
-      <section className="bg-[#141a4a] text-white rounded-[14px] p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+      <section className="bg-[#135224] text-white rounded-[14px] p-6 md:p-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div>
-          <span className="text-xs font-semibold text-[#f7d23a]">
-            Illustrative Weekly Promotions · Code WACO10 for 10% Demo Savings
+          <span className="inline-block px-2.5 py-0.5 rounded-md bg-[#c61d23] text-white text-xs font-semibold">
+            Weekly Promotions · Code WACO10 for 10% Pantry Savings
           </span>
-          <h1 className="mt-2 text-3xl md:text-4xl font-semibold tracking-tight">
+          <h1 className="mt-2.5 text-3xl md:text-4xl font-semibold tracking-tight">
             Market Savings &amp; Family Boxes
           </h1>
-          <p className="mt-2.5 text-sm md:text-base text-white/80 max-w-[54ch] leading-relaxed">
-            Curated pantry bundles and weekly price drops across rice, beans, cooking oils, poultry, and household care. Prices shown are illustrative demo offers.
+          <p className="mt-2.5 text-sm md:text-base text-white/85 max-w-[54ch] leading-relaxed">
+            Curated WACO Foods Signature Quartets and weekly price drops across Ekpoma rice, honey beans, cooking oils, poultry, and household care.
           </p>
         </div>
         <Link
           to="/shop"
-          className="h-11 px-6 rounded-full bg-[#f7d23a] text-[#141a4a] text-sm font-semibold inline-flex items-center justify-center hover:bg-white transition-colors shrink-0"
+          className="h-11 px-6 rounded-full bg-[#f7d23a] text-[#0c3b19] text-sm font-semibold inline-flex items-center justify-center hover:bg-white transition-colors shrink-0"
         >
           Shop Full Catalogue
         </Link>
@@ -47,7 +47,7 @@ export function OffersPage() {
       {/* Curated Family Bundles */}
       <section className="bg-white rounded-[14px] p-6 md:p-8">
         <div className="mb-5">
-          <p className="text-xs font-semibold text-[#5a5d76]">Pre-Built Pantry Crates</p>
+          <p className="text-xs font-semibold text-[#135224]">Pre-Built Pantry Crates</p>
           <h2 className="text-2xl font-semibold text-[#16193a] mt-1">Special Grocery Bundles</h2>
         </div>
 
@@ -55,28 +55,30 @@ export function OffersPage() {
           {BUNDLES.map((bundle) => (
             <div
               key={bundle.id}
-              className="bg-[#e9e7df]/60 rounded-[12px] p-4 flex flex-col justify-between"
+              className="bg-white border border-[#135224]/15 rounded-[12px] p-4 flex flex-col justify-between"
             >
               <div>
-                <div className="aspect-[4/3] rounded-[10px] overflow-hidden bg-white">
+                <div className="aspect-[4/3] rounded-[10px] overflow-hidden bg-white border border-[#16193a]/10 p-1.5">
                   <SafeImage
                     src={bundle.image}
                     alt={bundle.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover object-top rounded-[7px]"
                   />
                 </div>
                 <div className="mt-3.5">
-                  <span className="text-xs font-semibold text-[#3a49c9]">{bundle.savingsLabel}</span>
-                  <h3 className="text-lg font-semibold text-[#16193a] mt-0.5">{bundle.name}</h3>
+                  <span className="inline-block px-2 py-0.5 rounded bg-[#c61d23] text-white text-[11px] font-semibold">
+                    {bundle.savingsLabel}
+                  </span>
+                  <h3 className="text-lg font-semibold text-[#16193a] mt-1.5">{bundle.name}</h3>
                   <p className="text-xs text-[#5a5d76] mt-1.5 leading-relaxed">
                     {bundle.description}
                   </p>
                 </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#16193a]/10 flex items-center justify-between gap-2">
+              <div className="mt-4 pt-3 border-t border-[#135224]/12 flex items-center justify-between gap-2">
                 <div>
-                  <div className="text-lg font-semibold text-[#141a4a] tabular-nums">
+                  <div className="text-lg font-semibold text-[#135224] tabular-nums">
                     {formatNaira(bundle.bundlePrice)}
                   </div>
                   <div className="text-xs text-[#5a5d76] line-through tabular-nums">
@@ -86,7 +88,7 @@ export function OffersPage() {
                 <button
                   type="button"
                   onClick={() => handleAddBundle(bundle.id)}
-                  className="h-9 px-4 rounded-full bg-[#141a4a] text-white text-xs font-semibold hover:bg-[#3a49c9] transition-colors cursor-pointer"
+                  className="h-9 px-4 rounded-full bg-[#e6b31e] text-[#0c3b19] text-xs font-semibold hover:bg-[#135224] hover:text-white transition-colors cursor-pointer"
                 >
                   Add Bundle
                 </button>

@@ -50,12 +50,12 @@ export function WishlistPage() {
               <div>
                 <Link
                   to={`/product/${product.slug}`}
-                  className="block aspect-[4/3] rounded-[10px] overflow-hidden bg-[#f4f2eb]"
+                  className="block aspect-[4/3] rounded-[10px] overflow-hidden bg-white border border-[#16193a]/10 p-1.5"
                 >
                   <SafeImage
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover rounded-[7px]"
                   />
                 </Link>
                 <div className="mt-3 px-1">

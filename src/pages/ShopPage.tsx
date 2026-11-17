@@ -18,6 +18,7 @@ export function ShopPage() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [maxPrice, setMaxPrice] = useState<number>(40000);
   const [onlyDiscounted, setOnlyDiscounted] = useState(false);
+  const [onlyWacoSignature, setOnlyWacoSignature] = useState(false);
   const [inStockOnly, setInStockOnly] = useState(false);
   const [minRating, setMinRating] = useState<number>(0);
   const [sortBy, setSortBy] = useState<SortOption>(initialSort);
@@ -29,7 +30,7 @@ export function ShopPage() {
     setIsFiltering(true);
     const id = window.setTimeout(() => setIsFiltering(false), 120);
     return () => window.clearTimeout(id);
-  }, [query, selectedCategories, maxPrice, onlyDiscounted, inStockOnly, minRating, sortBy]);
+  }, [query, selectedCategories, maxPrice, onlyDiscounted, onlyWacoSignature, inStockOnly, minRating, sortBy]);
 
   const toggleCategory = (catId: string) => {
     setVisibleCount(24);
@@ -43,6 +44,7 @@ export function ShopPage() {
     setSelectedCategories([]);
     setMaxPrice(40000);
     setOnlyDiscounted(false);
+    setOnlyWacoSignature(false);
     setInStockOnly(false);
     setMinRating(0);
     setSortBy('popular');
@@ -65,6 +67,7 @@ export function ShopPage() {
       }
       if (p.price > maxPrice) return false;
       if (onlyDiscounted && !p.isDiscounted) return false;
+      if (onlyWacoSignature && !p.isWacoSignature) return false;
       if (inStockOnly && p.availability === 'out_of_stock') return false;
       if (p.rating < minRating) return false;
       return true;
@@ -85,7 +88,7 @@ export function ShopPage() {
           return b.reviewCount - a.reviewCount;
       }
     });
-  }, [query, selectedCategories, maxPrice, onlyDiscounted, inStockOnly, minRating, sortBy]);
+  }, [query, selectedCategories, maxPrice, onlyDiscounted, onlyWacoSignature, inStockOnly, minRating, sortBy]);
 
   const displayedProducts = filteredProducts.slice(0, visibleCount);
 
@@ -103,15 +106,15 @@ export function ShopPage() {
             setQuery(e.target.value);
             setVisibleCount(24);
           }}
-          placeholder="Search staples, meat, oil..."
-          className="w-full h-10 px-3.5 rounded-[10px] bg-[#e9e7df]/75 text-sm text-[#16193a] placeholder:text-[#5a5d76] focus:outline-none focus:ring-2 focus:ring-[#141a4a]/25"
+          placeholder="Search WACO rice, beans, meat..."
+          className="w-full h-10 px-3.5 rounded-[10px] bg-[#e9e7df]/75 text-sm text-[#16193a] placeholder:text-[#5a5d76] focus:outline-none focus:ring-2 focus:ring-[#135224]/30"
         />
       </div>
 
       <div>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-semibold text-[#16193a]">Max Price (Illustrative)</span>
-          <span className="text-xs font-semibold text-[#141a4a] tabular-nums">
+          <span className="text-xs font-semibold text-[#16193a]">Max Price</span>
+          <span className="text-xs font-semibold text-[#135224] tabular-nums">
             {formatNaira(maxPrice)}
           </span>
         </div>
@@ -122,7 +125,7 @@ export function ShopPage() {
           step={500}
           value={maxPrice}
           onChange={(e) => setMaxPrice(Number(e.target.value))}
-          className="w-full accent-[#141a4a] cursor-pointer"
+          className="w-full accent-[#135224] cursor-pointer"
         />
       </div>
 
@@ -138,7 +141,7 @@ export function ShopPage() {
                 type="checkbox"
                 checked={selectedCategories.includes(cat.id)}
                 onChange={() => toggleCategory(cat.id)}
-                className="w-4 h-4 rounded accent-[#141a4a]"
+                className="w-4 h-4 rounded accent-[#135224]"
               />
               <span className="truncate flex-1">{cat.name}</span>
             </label>
@@ -147,13 +150,22 @@ export function ShopPage() {
       </div>
 
       <div className="space-y-2.5 pt-2 border-t border-[#16193a]/10">
-        <p className="text-xs font-semibold text-[#16193a]">Promotions &amp; Stock</p>
+        <p className="text-xs font-semibold text-[#16193a]">WACO &amp; Stock Filters</p>
+        <label className="flex items-center gap-2.5 text-sm text-[#135224] font-medium cursor-pointer">
+          <input
+            type="checkbox"
+            checked={onlyWacoSignature}
+            onChange={(e) => setOnlyWacoSignature(e.target.checked)}
+            className="w-4 h-4 accent-[#135224]"
+          />
+          <span>WACO Signature Line only</span>
+        </label>
         <label className="flex items-center gap-2.5 text-sm text-[#16193a] cursor-pointer">
           <input
             type="checkbox"
             checked={onlyDiscounted}
             onChange={(e) => setOnlyDiscounted(e.target.checked)}
-            className="w-4 h-4 accent-[#141a4a]"
+            className="w-4 h-4 accent-[#135224]"
           />
           <span>Discounted items only</span>
         </label>
@@ -162,7 +174,7 @@ export function ShopPage() {
             type="checkbox"
             checked={inStockOnly}
             onChange={(e) => setInStockOnly(e.target.checked)}
-            className="w-4 h-4 accent-[#141a4a]"
+            className="w-4 h-4 accent-[#135224]"
           />
           <span>Ready in store today</span>
         </label>
@@ -187,7 +199,7 @@ export function ShopPage() {
       <button
         type="button"
         onClick={resetFilters}
-        className="w-full h-10 rounded-full bg-[#e9e7df] text-[#141a4a] text-xs font-semibold hover:bg-[#141a4a] hover:text-white transition-colors cursor-pointer"
+        className="w-full h-10 rounded-full bg-[#e9e7df] text-[#135224] text-xs font-semibold hover:bg-[#135224] hover:text-white transition-colors cursor-pointer"
       >
         Reset All Filters
       </button>
@@ -199,14 +211,14 @@ export function ShopPage() {
       <Breadcrumbs items={[{ label: 'Shop All Products' }]} />
 
       {/* Header Panel */}
-      <div className="bg-white rounded-[14px] p-6 md:p-8 mb-[var(--gap)] flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="bg-white border border-[#135224]/12 rounded-[14px] p-6 md:p-8 mb-[var(--gap)] flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <p className="text-xs font-semibold text-[#5a5d76]">Complete Supermarket Catalogue</p>
+          <p className="text-xs font-semibold text-[#135224]">Complete Supermarket Catalogue</p>
           <h1 className="text-3xl md:text-4xl font-semibold text-[#16193a] tracking-tight mt-1">
-            All WACO Groceries
+            All WACO Foods Groceries
           </h1>
           <p className="text-sm text-[#5a5d76] mt-1.5 max-w-[56ch]">
-            Browse 124 Nigerian staples, fresh market harvest, butcher cuts, and household essentials. All prices shown are illustrative demo figures.
+            Browse all {PRODUCTS.length} verified Nigerian staples, WACO Foods sealed packs, fresh market harvest, butcher cuts, and household essentials.
           </p>
         </div>
 
@@ -214,7 +226,7 @@ export function ShopPage() {
           <button
             type="button"
             onClick={() => setMobileFiltersOpen(true)}
-            className="lg:hidden h-10 px-4 rounded-full bg-[#e9e7df] text-[#141a4a] text-xs font-semibold inline-flex items-center gap-2 cursor-pointer"
+            className="lg:hidden h-10 px-4 rounded-full bg-[#e9e7df] text-[#135224] text-xs font-semibold inline-flex items-center gap-2 cursor-pointer"
           >
             <SlidersHorizontal className="w-4 h-4" />
             Filters
@@ -227,7 +239,7 @@ export function ShopPage() {
             id="shop-sort"
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="h-10 px-4 rounded-full bg-[#e9e7df] text-[#141a4a] text-xs font-semibold focus:outline-none cursor-pointer"
+            className="h-10 px-4 rounded-full bg-[#e9e7df] text-[#135224] text-xs font-semibold focus:outline-none cursor-pointer"
           >
             <option value="popular">Sort: Most Popular</option>
             <option value="price-asc">Sort: Price Low to High</option>
@@ -251,13 +263,13 @@ export function ShopPage() {
               Showing <strong className="text-[#16193a]">{displayedProducts.length}</strong> of{' '}
               <strong className="text-[#16193a]">{filteredProducts.length}</strong> products
             </span>
-            {selectedCategories.length > 0 && (
+            {(selectedCategories.length > 0 || onlyWacoSignature || onlyDiscounted) && (
               <button
                 type="button"
                 onClick={resetFilters}
-                className="font-semibold text-[#3a49c9] hover:underline cursor-pointer"
+                className="font-semibold text-[#135224] hover:underline cursor-pointer"
               >
-                Clear {selectedCategories.length} filter(s)
+                Clear filters
               </button>
             )}
           </div>
@@ -277,9 +289,9 @@ export function ShopPage() {
               <button
                 type="button"
                 onClick={resetFilters}
-                className="mt-5 h-10 px-6 rounded-full bg-[#141a4a] text-white text-sm font-semibold hover:bg-[#3a49c9] transition-colors cursor-pointer"
+                className="mt-5 h-10 px-6 rounded-full bg-[#135224] text-white text-sm font-semibold hover:bg-[#0c3b19] transition-colors cursor-pointer"
               >
-                Show All 124 Products
+                Show All {PRODUCTS.length} Products
               </button>
             </div>
           ) : (

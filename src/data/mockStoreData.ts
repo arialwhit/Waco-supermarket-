@@ -2,20 +2,32 @@ import { Bundle, FaqItem, Order } from '../types/store';
 import { STORE_IMAGES } from './images';
 
 export const ANNOUNCEMENTS = [
-  'Illustrative Store Demo — Same-day neighborhood delivery on orders placed before 2:00 PM',
-  'Use code WACO10 at checkout for an illustrative 10% pantry savings demo',
-  'Connected to our flagship physical store — Click & Collect ready in under 2 hours',
-  'Fresh Mile 12 & Jos harvest restocked every morning at 7:00 AM',
+  'WACO Foods — Quality From Our Farms To Your Table · Shop F1008, Apo Urban Market, Abuja',
+  '100% Natural Packaged Rice, Beans, Garri & Plantain Flour — Clean, Sealed & Accurate Weights',
+  'Use code WACO10 at checkout for 10% pantry savings · Call or WhatsApp +234 811 786 2336',
+  'Fresh tomatoes, beef, Titus fish & leafy greens chilled daily for Apo, Wuse, Garki & nationwide dispatch',
 ];
 
 export const BUNDLES: Bundle[] = [
+  {
+    id: 'bundle-waco-pantry',
+    slug: 'waco-signature-pantry-quartet',
+    name: 'WACO Signature Pantry Quartet',
+    description:
+      'All four farm-fresh WACO Foods staples in one bundle: 2kg Ekpoma Local Rice, 2kg Black Eye Beans, 2kg Ijebu Garri, and 2kg Premium Plantain Flour.',
+    image: STORE_IMAGES.brand.farmPoster,
+    productIds: ['waco-rg-ekpoma', 'waco-bl-blackeye-2kg', 'waco-gc-01', 'waco-gc-plantain-2kg'],
+    bundlePrice: 23500,
+    originalTotal: 26100,
+    savingsLabel: 'Save ₦2,600',
+  },
   {
     id: 'bundle-jollof',
     slug: 'sunday-jollof-family-box',
     name: 'Sunday Jollof Family Box',
     description:
       'Everything for a celebratory family pot: 5kg Mama Gold Rice, 2.5kg Stew Pepper Mix, 2L Vegetable Oil, Whole Dressed Chicken, and Curry/Thyme.',
-    image: STORE_IMAGES.yellowBox,
+    image: STORE_IMAGES.products['waco-rg-ekpoma'],
     productIds: ['waco-rg-01', 'waco-veg-08', 'waco-co-02', 'waco-mp-01', 'waco-ss-05'],
     bundlePrice: 35900,
     originalTotal: 40700,
@@ -26,24 +38,12 @@ export const BUNDLES: Bundle[] = [
     slug: 'soup-and-swallow-pantry-pack',
     name: 'Soup & Swallow Pantry Pack',
     description:
-      'Authentic weekend soup kit: 3kg Ijebu Garri, 1kg Hand-Picked Egusi, 500g Smoked Catfish, 2L Edo Red Palm Oil, and Fresh Ugu Leaves.',
-    image: STORE_IMAGES.categories['beans-legumes'],
-    productIds: ['waco-gc-01', 'waco-bl-04', 'waco-fs-02', 'waco-co-01', 'waco-veg-06'],
+      'Authentic weekend soup kit: 2kg WACO Yellow Garri, 1kg Hand-Picked Egusi, 500g Smoked Catfish, 2L Edo Red Palm Oil, and Fresh Ugu Leaves.',
+    image: STORE_IMAGES.products['waco-gc-yellow-2kg'],
+    productIds: ['waco-gc-yellow-2kg', 'waco-bl-04', 'waco-fs-02', 'waco-co-01', 'waco-veg-06'],
     bundlePrice: 22100,
-    originalTotal: 24750,
-    savingsLabel: 'Save ₦2,650',
-  },
-  {
-    id: 'bundle-breakfast',
-    slug: 'weekday-breakfast-crate',
-    name: 'Weekday Breakfast Crate',
-    description:
-      'Mornings sorted for the week: Crate of 30 Brown Eggs, Soft Agege Bread Loaf, 1kg Rolled Oats, Milo Refill, and 6 Tins Peak Milk.',
-    image: STORE_IMAGES.categories.breakfast,
-    productIds: ['waco-de-01', 'waco-bk-01', 'waco-bk-02', 'waco-bv-03', 'waco-de-02'],
-    bundlePrice: 19600,
-    originalTotal: 21850,
-    savingsLabel: 'Save ₦2,250',
+    originalTotal: 24950,
+    savingsLabel: 'Save ₦2,850',
   },
 ];
 
@@ -52,25 +52,25 @@ export const TESTIMONIALS = [
     id: 't1',
     name: 'Folake Adebowale',
     role: 'Home Cook & Mother of Three',
-    location: 'Victoria Island (Illustrative)',
+    location: 'Garki II, Abuja',
     quote:
-      'Sorting tomatoes and beans used to eat half my Saturday. Every WACO bag arrives stone-free, sealed cleanly, and weighed accurately.',
+      'Sorting tomatoes and beans used to eat half my Saturday. Every WACO Foods bag arrives stone-free, sealed cleanly, and weighed accurately.',
   },
   {
     id: 't2',
     name: 'Chukwudi Nwosu',
     role: 'Architect',
-    location: 'Ikeja GRA (Illustrative)',
+    location: 'Apo Legislative Quarters, Abuja',
     quote:
-      'Being able to order bulk Ofada rice, smoked catfish, and household detergents in one clean cart saves me two separate market trips.',
+      'Picking up sealed Ekpoma Local Rice, Yellow Garri, and Plantain Flour right from Shop F1008 Apo Urban Market—or ordering online—is seamless.',
   },
   {
     id: 't3',
     name: 'Zainab Danjuma',
     role: 'Culinary Instructor',
-    location: 'Wuse II (Illustrative)',
+    location: 'Wuse II, Abuja',
     quote:
-      'The unrefined red palm oil and fresh Ugu arrive vibrant and crisp. Knowing there is a real physical store behind the website builds huge trust.',
+      'From 5kg WACO Honey Beans to fresh beef steaks and sweet bell peppers, knowing a real Abuja retail store backs every pack builds total trust.',
   },
 ];
 
@@ -83,30 +83,30 @@ export const INITIAL_MOCK_ORDERS: Order[] = [
     status: 'Delivered',
     customer: {
       fullName: 'Adaeze Eze',
-      email: 'adaeze.demo@wacostore.example',
-      phone: '+234 800 000 0142',
+      email: 'adaeze.demo@wacofoods.ng',
+      phone: '+234 811 786 2336',
     },
     delivery: {
-      state: 'Lagos',
-      city: 'Lekki Phase 1',
-      address: '14 Admiralty Way (Illustrative Address)',
+      state: 'FCT Abuja',
+      city: 'Apo',
+      address: '22 Gudu District Crescent, Apo, Abuja',
       instructions: 'Call at security gate on arrival.',
       method: 'standard',
     },
     paymentMethod: 'card',
     items: [
       {
-        productId: 'waco-rg-01',
-        name: 'Mama Gold Long Grain Parboiled Rice',
-        image: STORE_IMAGES.categories['rice-grains'],
-        variant: '5kg Bag',
-        unitPrice: 18500,
-        quantity: 1,
+        productId: 'waco-rg-ekpoma',
+        name: 'WACO Foods Premium Local Rice (Ekpoma)',
+        image: STORE_IMAGES.products['waco-rg-ekpoma'],
+        variant: '2kg Sealed Pouch',
+        unitPrice: 7800,
+        quantity: 2,
       },
       {
         productId: 'waco-de-01',
-        name: 'Ogun Fresh Large Brown Farm Eggs',
-        image: STORE_IMAGES.categories['dairy-eggs'],
+        name: 'Fresh Large Brown Farm Eggs',
+        image: STORE_IMAGES.products['waco-de-01'],
         variant: 'Full Crate (30)',
         unitPrice: 5800,
         quantity: 1,
@@ -114,40 +114,48 @@ export const INITIAL_MOCK_ORDERS: Order[] = [
       {
         productId: 'waco-co-01',
         name: 'Edo Pure Unrefined Red Palm Oil',
-        image: STORE_IMAGES.categories['cooking-oils'],
+        image: STORE_IMAGES.products['waco-co-01'],
         variant: '2 Litre Bottle',
         unitPrice: 5400,
         quantity: 1,
       },
     ],
-    subtotal: 29700,
+    subtotal: 26800,
     deliveryFee: 2000,
     discount: 0,
-    total: 31700,
+    total: 28800,
   },
   {
     id: 'ord-1038',
     orderNumber: 'WACO-1038',
     createdAt: 'November 03, 2026',
-    estimatedDelivery: 'In Transit — Illustrative Slot',
+    estimatedDelivery: 'In Transit — Apo Dispatch Slot',
     status: 'Out for Delivery',
     customer: {
       fullName: 'Adaeze Eze',
-      email: 'adaeze.demo@wacostore.example',
-      phone: '+234 800 000 0142',
+      email: 'adaeze.demo@wacofoods.ng',
+      phone: '+234 811 786 2336',
     },
     delivery: {
-      state: 'Lagos',
-      city: 'Lekki Phase 1',
-      address: '14 Admiralty Way (Illustrative Address)',
+      state: 'FCT Abuja',
+      city: 'Wuse II',
+      address: '14 Aminu Kano Crescent, Wuse II, Abuja',
       method: 'express',
     },
     paymentMethod: 'pay_on_delivery',
     items: [
       {
+        productId: 'waco-bl-01',
+        name: 'WACO Foods Honey Beans (Oloyin) — 5kg',
+        image: STORE_IMAGES.products['waco-bl-01'],
+        variant: '5kg Sealed Sack',
+        unitPrice: 18900,
+        quantity: 1,
+      },
+      {
         productId: 'waco-veg-08',
         name: 'Jollof & Stew Pepper Mix Box',
-        image: STORE_IMAGES.categories.vegetables,
+        image: STORE_IMAGES.products['waco-veg-08'],
         variant: '2.5kg Curated Box',
         unitPrice: 5500,
         quantity: 1,
@@ -155,16 +163,16 @@ export const INITIAL_MOCK_ORDERS: Order[] = [
       {
         productId: 'waco-mp-01',
         name: 'Fresh Whole Dressed Broiler Chicken',
-        image: STORE_IMAGES.categories['meat-poultry'],
+        image: STORE_IMAGES.products['waco-mp-01'],
         variant: 'Cut in 8 Pieces',
         unitPrice: 7800,
         quantity: 1,
       },
     ],
-    subtotal: 13300,
-    deliveryFee: 3000,
+    subtotal: 32200,
+    deliveryFee: 2500,
     discount: 0,
-    total: 16300,
+    total: 34700,
   },
 ];
 
@@ -172,9 +180,9 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'faq-1',
     topic: 'Ordering',
-    question: 'How do I place a grocery order on WACO?',
+    question: 'How do I place a grocery order on WACO Foods?',
     answer:
-      'Browse any aisle or search directly for items, pick your preferred package weight (e.g. 2kg or 5kg), add them to your shopping bag, and complete our streamlined checkout flow. All prices and order submissions in this phase are illustrative frontend demonstrations.',
+      'Browse any aisle or the WACO Signature Packaged Line, select your package size (2kg, 5kg, or crates), add items to your shopping bag, and submit your order for Abuja doorstep delivery or Click & Collect pickup at Shop F1008, Apo Urban Market.',
   },
   {
     id: 'faq-2',
@@ -186,50 +194,50 @@ export const FAQ_ITEMS: FaqItem[] = [
   {
     id: 'faq-3',
     topic: 'Products',
-    question: 'Are your rice, beans, and garri items pre-cleaned?',
+    question: 'Are WACO Foods rice, beans, garri, and plantain flour pre-cleaned?',
     answer:
-      'Our dry staples are selected and packed in clean sealed pouches and buckets, sorted to minimize chaff and stones before leaving our retail store floor.',
+      'Yes. Every WACO Foods sealed pack—Ekpoma Local Rice, Honey Beans, Black Eye Beans, Ijebu Garri, Yellow Garri, and Plantain Flour—is 100% natural, hygienically processed, and stone-free.',
   },
   {
     id: 'faq-4',
     topic: 'Products',
-    question: 'How are fresh meat, fish, and leafy greens kept fresh?',
+    question: 'How are fresh tomatoes, meat, fish, and leafy greens handled?',
     answer:
-      'Perishable proteins and greens are stored in temperature-controlled chillers at the WACO store and packed separately in insulated bags prior to dispatch (illustrative store standard).',
+      'Grade-A tomatoes, beef cuts, chilled chicken, mackerel, and fresh ugu leaves are stored in temperature-controlled chillers at Shop F1008, Apo Urban Market, and packed separately prior to dispatch.',
   },
   {
     id: 'faq-5',
     topic: 'Delivery',
-    question: 'What delivery speeds does WACO plan to support?',
+    question: 'What fulfillment options does WACO Foods offer?',
     answer:
-      'This storefront demonstrates three fulfillment modes: Standard Next-Day Delivery, Same-Day Express Dispatch, and Click & Collect pickup at our physical store counter. Specific coverage zones will be confirmed upon store launch.',
+      'You can choose Same-Day Express Dispatch around Abuja (Apo, Gudu, Garki, Wuse, Maitama, Asokoro), Standard Next-Day Delivery, or walk-in Click & Collect pickup at Shop F1008, Apo Urban Market.',
   },
   {
     id: 'faq-6',
     topic: 'Payments',
-    question: 'Do I enter real card details on this preview website?',
+    question: 'Do I enter real card details on this storefront preview?',
     answer:
-      'No. This is a frontend-only storefront showcase. No real payment gateway is connected, and no real charges are made when submitting the simulated checkout form.',
+      'No. Checkout on this preview website demonstrates order confirmation and tracking safely in your browser. You can also place direct orders via +234 811 786 2336 or +234 706 930 2350.',
   },
   {
     id: 'faq-7',
     topic: 'Returns',
-    question: 'What happens if a fresh produce item arrives bruised or incorrect?',
+    question: 'What happens if an item arrives bruised or incorrect?',
     answer:
-      'Under our draft customer-first return policy (subject to final business approval), damaged or incorrect perishable items reported at delivery or within 24 hours qualify for replacement or store credit.',
+      'Damaged or incorrect perishable items reported at delivery or within 24 hours qualify for immediate replacement or store credit.',
   },
   {
     id: 'faq-8',
     topic: 'Accounts',
     question: 'Do I need an account to browse or test checkout?',
     answer:
-      'No—guest checkout works seamlessly, and you can also test our simulated Customer Login and Registration flows to manage addresses and view mock order history.',
+      'No—guest checkout works seamlessly, and you can also manage saved delivery addresses and reorder past baskets from Customer Account.',
   },
   {
     id: 'faq-9',
     topic: 'Order Tracking',
     question: 'How can I inspect my order status after checkout?',
     answer:
-      'Immediately after simulated checkout you are routed to an Order Confirmation receipt, and your order also appears in your Account Order History with a step-by-step status timeline.',
+      'Immediately after checkout you are routed to an Order Confirmation receipt, and your order appears in Account Order History with a step-by-step fulfillment timeline.',
   },
 ];
