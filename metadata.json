@@ -1,0 +1,6 @@
+{
+  "name": "WACO — Online Supermarket & Fresh Pantry",
+  "description": "WACO customer-facing online supermarket connected to our neighborhood retail store. Fresh Nigerian produce, grains, proteins, oils, and household essentials.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

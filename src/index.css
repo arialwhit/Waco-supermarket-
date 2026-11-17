@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  --page: #e9e7df;
+  --ink: #16193a;
+  --navy: #141a4a;
+  --white: #ffffff;
+  --card: #f7d23a;
+  --royal: #3a49c9;
+  --forest: #1c4a35;
+  --muted: #5a5d76;
+  --line: rgba(22, 25, 58, 0.1);
+  --gap: 1.19vw;
+  --w: 87vw;
+  --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (max-width: 760px) {
+  :root {
+    --w: calc(100vw - 32px);
+    --gap: 12px;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background-color: var(--page);
+  color: var(--ink);
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: "Jost", "Futura", "Century Gothic", Arial, sans-serif;
+  color: var(--ink);
+  background-color: var(--page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Signature MotionSites left-to-right nav link underline */
+.nav-link-line {
+  position: relative;
+}
+
+.nav-link-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s var(--ease);
+}
+
+.nav-link-line:hover::after,
+.nav-link-line.active::after {
+  transform: scaleX(1);
+}
+
+/* Clip-path downward wipe for Shop/Categories mega-menu strip */
+.waco-drop-strip {
+  clip-path: inset(0 0 100% 0 round 10px);
+  transition: clip-path 0.45s var(--ease);
+  pointer-events: none;
+}
+
+.waco-drop-strip.open {
+  clip-path: inset(0 0 0 0 round 10px);
+  pointer-events: auto;
+}
+
+.waco-drop-item {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.3s ease, transform 0.4s var(--ease);
+}
+
+.waco-drop-strip.open .waco-drop-item {
+  opacity: 1;
+  transform: none;
+}
+
+.waco-drop-strip.open .waco-drop-item:nth-child(2) {
+  transition-delay: 0.04s;
+}
+.waco-drop-strip.open .waco-drop-item:nth-child(3) {
+  transition-delay: 0.08s;
+}
+.waco-drop-strip.open .waco-drop-item:nth-child(4) {
+  transition-delay: 0.12s;
+}
+.waco-drop-strip.open .waco-drop-item:nth-child(5) {
+  transition-delay: 0.16s;
+}
+
+/* Radial feather mask for the yellow showcase card visual */
+.radial-feather-mask {
+  -webkit-mask-image: radial-gradient(closest-side, #000 72%, transparent 99%);
+  mask-image: radial-gradient(closest-side, #000 72%, transparent 99%);
+}
+
+/* Kitchen landed headline transition */
+.kitchen-reveal-item {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+}
+
+.kitchen-landed .kitchen-reveal-item {
+  opacity: 1;
+  transform: none;
+}
+
+.kitchen-landed .kitchen-reveal-delay {
+  transition-delay: 0.12s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
